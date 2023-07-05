@@ -9,7 +9,7 @@ export function load(Blockly) {
 		    {
 		      "type": "field_input",
 		      "name": "PIN",
-		      "text": "A0"
+		      "text": "GP0"
 		    },
 		    {
 		      "type": "input_value",
@@ -41,21 +41,12 @@ export function load(Blockly) {
                     {
                       "type": "field_input",
                       "name": "PIN",
-                      "text": "D0"
+                      "text": "GP25"
                     },
 		    {
-    		      "type": "field_dropdown",
+    		      "type": "input_value",
      		      "name": "VALUE",
-     	 	      "options": [
-       			 [
-         		   "%{BKY_TRUE}",
-          		   "True"
-        		 ],
-       			 [
-          		   "%{BKY_FALSE}",
-         		   "False"
-        		 ]
-      		      ]
+                      "check": "Boolean"
                     },
                   ],
                   "inputsInline": true,
@@ -69,7 +60,7 @@ export function load(Blockly) {
     Blockly.Python['set_digital_pin_value'] = function (block) {
         Blockly.Python.definitions_['import_mirte'] = 'from mirte_robot import robot\nmirte=robot.createRobot()';
         var pin = block.getFieldValue('PIN');
-        var value = block.getFieldValue('VALUE');
+        var value = Blockly.Python.valueToCode(block, 'VALUE', Blockly.Python.ORDER_ATOMIC);
         return `mirte.setDigitalPinValue('${pin}', ${value})\n`;
     };
 
@@ -83,7 +74,7 @@ export function load(Blockly) {
 		    {
                       "type": "field_input",
                       "name": "PIN",
-                      "text": "A0"
+                      "text": "GP26"
 		    }
 		  ],
 		  "inputsInline": true,
@@ -113,7 +104,7 @@ export function load(Blockly) {
                     {
                       "type": "field_input",
                       "name": "PIN",
-                      "text": "D0"
+                      "text": "GP1"
                     }
                   ],
                   "inputsInline": true,

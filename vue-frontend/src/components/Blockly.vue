@@ -1,7 +1,10 @@
 <template>
-  <div>
 
-    <div id="blocklyArea" ref="blocklyArea" class="blocklyArea">
+
+
+  <div class="h-100">
+
+    <div id="blocklyArea" ref="blocklyArea" class="blocklyArea h-100">
       <div id="blocklyDiv" ref="blocklyDiv" style="height: 480px; width: 600px"></div>
     </div>
 
@@ -169,9 +172,22 @@
               </value>
             </block> 
 
-            <block type="set_analog_pin_value"></block>
+            <block type="set_analog_pin_value">
+              <value name="VALUE">
+                <block type="math_number">
+                  <field name="NUM">0</field>
+                </block>
+              </value>
+            </block>
 
-            <block type="set_digital_pin_value"></block>
+            <block type="set_digital_pin_value">
+              <value name="VALUE">
+                <block type="logic_boolean">
+                  <field name="BOOL">TRUE</field>
+                </block>
+              </value>
+
+            </block>
 
          </category>
 
@@ -179,13 +195,22 @@
                   colour="%{BKY_ACTIONS_RGB}">
           <block v-for="func in peripherals[actuator].functions"
                  :type="func.concat('_').concat(actuator)">
+             <value v-if="peripherals[actuator].default_value" :name="peripherals[actuator].default_value.name">
+                <block :type="peripherals[actuator].default_value.type">
+                  <field :name="peripherals[actuator].default_value.field">{{peripherals[actuator].default_value.value}}</field>
+                </block>
+              </value>
+
+
+
           </block>
         </category>
      </category>
 
     </xml>
+</div>
 
-  </div>
+
 </template>
 
 <script>
@@ -425,7 +450,7 @@ export default {
       })
 
       // workspace configuration
-      this.workspace.toolbox_.flyout_.autoClose = true
+      this.workspace.toolbox_.flyout_.autoClose = false
   
       // Window resize listener
       const onresize = (e) => {
@@ -499,6 +524,15 @@ export default {
     '$store.getters.getPConfig':
         function (newVal, oldVal) {
           window.location.reload()
+        },
+    '$store.getters.getBlockly':
+        function (newVal, oldVal) {
+          if (newVal != ""){
+            Blockly.mainWorkspace.clear()
+            Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(newVal), this.workspace)
+            Blockly.mainWorkspace.zoomToFit()
+            this.$store.dispatch('setBlockly', "")
+          }
         },
   },
   mounted() {

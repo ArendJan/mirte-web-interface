@@ -9,7 +9,7 @@ export default {
         tutorial: null,
         blockly: "",
         linenumber: 0,
-        execution: "stopped",   // TODO: enum?
+        execution: "disconnected",   // TODO: enum?
         user: "none",           // TODO: at the moment it can not be empty on start
         PConfig: "[]",          // For some reason this needs to be a string (persistent?)
         locale: selectedLocale
@@ -94,5 +94,5 @@ export default {
             return state.locale = locale;
         }
     },
-    plugins: [createPersistedState()]
+    plugins: [createPersistedState({ paths: ["code", "blockly", "locale"] })]
 }

@@ -82,16 +82,12 @@
 
           <div class="text-white p-2 h3 layoutbox-title w-100 background-primary">
             {{ $t('settings.microcontroller') }}
-            <button @click="uploadMCU" type="button" class="btn btn-danger float-right">
-              <span v-if="!busy">{{ $t('settings.upload') }}</span>
-              <i v-else class="fa fa-spin fa-stroopwafel"></i>
-            </button>
           </div>
 
         <div class="layoutbox-content">
           <div class="row">
-              <b-form-radio v-model="mcu" value="stm32" data-label="STM32">
-                Robotdyn STM32 Black Pill (arduino bootloader)
+              <b-form-radio v-model="mcu" value="pico" data-label="Raspberry Pi Pico">
+                Raspberry Pi Pico
               </b-form-radio>
           </div>
           <div class="row">
@@ -145,7 +141,7 @@ export default {
       peripherals: properties_ph,
       microcontrollers: properties_mc,
       board: 'breadboard',
-      mcu: "stm32",
+      mcu: "pico",
       fields: [
         {key: 'type', label: 'type'},
         {key: 'name', label: 'Naam'},

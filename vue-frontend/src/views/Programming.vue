@@ -2,43 +2,63 @@
 
 
        <div class="row p-4 h-100">
-         <div class="col-3 p-2 h-100" style="overflow: hidden;"> 
+
+         <div class="col-3 p-2 h-100" style="overflow: hidden;">
              <div class="layoutbox rounded h-100" style="overflow: hidden; display: flex; flex-flow: column;">
 
                 <div class="text-white p-2 h3 m-0 layoutbox-title w-100 background-primary">
                    {{ $t('main.sensors') }}
                 </div>
-                  
-           
+
+
                 <div class="h-100" style="overflow-y: auto;">
                    <Sensors/>
                 </div>
-              
 
-             </div>
-         </div> 
 
+             </div>-         
+         </div>
 
          <div class="col-6 p-2 h-100" style="overflow: hidden;"> 
              <div class="layoutbox rounded h-100" style="overflow: hidden; display: flex; flex-flow: column;">
 
                 <div class="text-white p-2 h3 m-0 layoutbox-title w-100 background-primary">
                   {{ $t('main.programming') }}
+
+        <button :disabled="isBlockly" class="btn btn-outline-light mr-2"
+            @click="setLanguage('blockly')"
+        >
+           {{ $t('programming.blockly') }}
+        </button>
+
+        <button :disabled="!isBlockly" class="btn btn-outline-light mr-2"
+            @click="setLanguage('python')"
+        >
+           {{ $t('programming.python') }}
+        </button>
+
+
+                      
+
                       <div style="float: right">
                         <ControlButtons/>
                       </div>
                 </div>
                   
            
-                <div class="h-60" style="min-height: 60%; overflow: auto;" >
+                <div v-if="isBlockly" class="h-100"> 
                     <Blockly/>
                 </div>
 
-                <div class="h-40" style="min-height: 40%; overflow: auto;" >
+
+                <div v-else class="h-100">
                     <Codemirror/>
                 </div>
 
+
               
+
+
 
              </div>
          </div> 
@@ -82,6 +102,23 @@ export default {
     Sensors,
     Actuators,
     Codemirror
+  },
+  data: () => ({
+        language: "blockly",
+  }),
+  methods: {
+        setLanguage(language) {
+	   this.language = language;
+        },
+  },
+  computed: {
+       isBlockly: function(){
+           return this.language == "blockly";
+       },
   }
+
+
+
+
 }
 </script>

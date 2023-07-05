@@ -35,14 +35,15 @@ export default {
                   }.bind(this), 10);
               };
 
-              this.linenr_socket.onopen = (event) => {
-                  this.linenr_socket.send("c");
-                  this.$store.dispatch('setExecution', 'running');
-              };
-
               this.linenr_socket.onmessage = (event) => {
                 if (event.data != 0) {
                   // Update only when in step/pause mode
+                  if (event.data.substr(0, 4) == "pid:"){
+                     let debugger_pid = String(event.data.substr(4));
+let strace_cmd = 'strace -ff -e write=1,2 -s 1024 -p ' + debugger_pid + ' 2>&1 | grep "^ |" --line-buffered | stdbuf -oL cut -b11-60 | stdbuf -oL sed -e "s/ //g" | xxd -r -p';
+                     this.shell_socket.send(strace_cmd + '\n');
+                     this.$store.dispatch('setExecution', 'running');
+                  }
                   if (this.$store.getters.getExecution == "paused") {
                      this.$store.dispatch('setLinenumber', event.data);
                   }
@@ -68,7 +69,7 @@ export default {
                    },
                    body: this.$store.getters.getCode,
                }).then(res => {
-                   this.waitForSocketConnection();
+                   this.linenr_socket.send("c");
                }).catch(err => {
                    console.log("sending failed")
                    console.log(err)
@@ -112,8 +113,11 @@ export default {
         },
     },
     mounted()  {
-       // Open the websocket connection to the backend
+        // Open the websocket connection to the backend
         this.shell_socket = shell_socket;
+
+        // Open the websocket connection to the debugger
+        this.waitForSocketConnection();
 
         // The terminal
         this.term = new Terminal({theme: { background: '#e2e8e9', foreground: '#e2e8e9', cursor: '#e2e8e9' }});
@@ -129,11 +133,13 @@ export default {
         this.term.setOption('disableStdin', true);
         
         // Load env variables
-        this.shell_socket.onopen = (ev) => {
-            this.shell_socket.send("stty -echo && PS1='' && clear\n");
-            this.shell_socket.send("clear\n");
-            this.shell_socket.send("cd /home/mirte/workdir/ && source /opt/ros/noetic/setup.bash && source /home/mirte/mirte_ws/devel/setup.bash && pkill -f mirte_robot.linetrace || /bin/true && python3 -m mirte_robot.linetrace & clear\n");
-        };
+        this.shell_socket.onmessage = (ev) => {
+           if (this.$store.getters.getExecution == "disconnected") {
+              this.shell_socket.send("unset HISTFILE && stty -echo && PS1='' && clear\n");
+              this.shell_socket.send("source /home/mirte/mirte_ws/devel/setup.bash && cd /home/mirte/workdir && clear\n");
+              this.$store.dispatch('setExecution', 'stopped');
+           }
+        }
 
         // Autoresize terminal on size change
         const observer = new ResizeObserver(entries => {

@@ -50,18 +50,18 @@
 
         <button href="#" class="btn btn-outline-light mx-2" 
             v-b-tooltip.hover 
-            :title="$t('programming.download')" 
+            :title="$t('programming.save')" 
             @click="download"
         >
-            <i class="fa fa-download"></i>
+            <i class="fa fa-save"></i>
         </button>
 
         <button class="btn btn-outline-light mr-2" 
             v-b-tooltip.hover 
-            :title="$t('programming.upload')" 
+            :title="$t('programming.open')" 
             @click="openFileWindow"
         >
-            <i class="fa fa-upload"></i>
+            <i class="fa fa-folder-open"></i>
             <input ref="file_input" @change="upload" type="file" name="name" style="display: none;" />
         </button>
 
@@ -79,6 +79,7 @@ export default {
         },
 
         openFileWindow(){
+            this.$refs.file_input.value = null;
             this.$refs.file_input.click()
         },
 
@@ -122,17 +123,17 @@ export default {
        isRedoDisabled: function(){
            return false; // TODO: determine strategy
        },
-     	 isPlayDisabled: function(){
-          return this.$store.getters.getExecution == "running";
+       isPlayDisabled: function(){
+          return this.$store.getters.getExecution == "running" || this.$store.getters.getExecution == "disconnected";
        },
-     	 isPauseDisabled: function(){
-          return this.$store.getters.getExecution != "running";
+       isPauseDisabled: function(){
+          return this.$store.getters.getExecution != "running" || this.$store.getters.getExecution == "disconnected";
        },
-     	 isStepDisabled: function(){
-          return this.$store.getters.getExecution == "stopped";
+       isStepDisabled: function(){
+          return this.$store.getters.getExecution == "stopped" || this.$store.getters.getExecution == "disconnected";
        },
-     	 isStopDisabled: function(){
-          return this.$store.getters.getExecution == "stopped";
+       isStopDisabled: function(){
+          return this.$store.getters.getExecution == "stopped" || this.$store.getters.getExecution == "disconnected";
        }
     }
 

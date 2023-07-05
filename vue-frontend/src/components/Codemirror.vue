@@ -1,5 +1,7 @@
 <template>
-  <textarea ref="codemirror"></textarea>
+  <div class="h-100">
+    <textarea ref="codemirror"></textarea>
+  </div>
 </template>
 
 <script>
@@ -15,7 +17,7 @@ export default {
     makeMarker: () => {
       var marker = document.createElement("div");
       marker.style.color = "#822";
-      marker.innerHTML = "●";
+      marker.innerHTML = "⇨";
       return marker;
     }
   },
