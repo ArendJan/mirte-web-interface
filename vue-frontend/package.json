@@ -23,6 +23,8 @@
     "bootstrap-vue": "^2.8.0",
     "canvas-to-image": "2.2.0",
     "copy-webpack-plugin": "^5.1.1",
+    "eslint": "^8.44.0",
+    "eslint-plugin-vue": "^9.15.1",
     "hotkeys-js": "^3.8.1",
     "html2canvas": "^1.0.0-rc.7",
     "js-yaml": "^4.0.0",

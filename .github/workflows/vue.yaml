@@ -1,8 +1,8 @@
-name: nodeJS_tests
+name: Vue_tests
 
 on: [push, pull_request]
 jobs:
-    nodejs:
+    vue:
       runs-on: ubuntu-latest
       steps:
         - uses: dreamcodez/dead-simple-nodejs@1.0.1
@@ -10,10 +10,12 @@ jobs:
             NODE_VERSION: 16.1.0
             NODE_DISTRO: linux-x64 # optional
         - uses: actions/checkout@v2
-        - name: semistandard test
+        - name: vue test
           run: |
-            cd nodejs-backend
+            cd vue-frontend
             npm i
-            npx semistandard
+            npx eslint --ext .js,.vue src
+        - name: vue build
+          run: npm run build 
 
   
