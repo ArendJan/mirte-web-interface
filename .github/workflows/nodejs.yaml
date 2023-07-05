@@ -14,6 +14,7 @@ jobs:
           run: |
             cd nodejs-backend
             npm i
-            npx semistandard
+            npm i snazzy
+            npx semistandard | npx snazzy
 
   

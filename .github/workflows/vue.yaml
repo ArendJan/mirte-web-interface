@@ -10,12 +10,14 @@ jobs:
             NODE_VERSION: 16.1.0
             NODE_DISTRO: linux-x64 # optional
         - uses: actions/checkout@v2
+        - run: cd vue-frontend && npm i
+        - name: vue build
+          run: |
+            cd vue-frontend
+            npm run build 
         - name: vue test
           run: |
             cd vue-frontend
-            npm i
             npx eslint --ext .js,.vue src
-        - name: vue build
-          run: npm run build 
 
   
