@@ -6,6 +6,7 @@
       "1b": "pwm"
     },
     "functions": ["set_speed", "stop"],
+    "default_value": {"name": "SPEED", "type": "math_number", "field": "NUM", "value": 0},
     "rel_path": "Actuators\\Motor\\pwm_motor\\pwm_motor.py",
     "service_type": "mirte_msgs/SetMotorSpeed",
     "service_value": "speed",
@@ -19,6 +20,7 @@
       "en": "pwm"
     },
     "functions": ["set_speed", "stop"],
+    "default_value": {"name": "SPEED", "type": "math_number", "field": "NUM", "value": 0},
     "rel_path": "Actuators\\Motor\\pwm_motor\\pwm_motor.py",
     "service_type": "mirte_msgs/SetMotorSpeed",
     "service_value": "speed",
@@ -52,6 +54,7 @@
        "pin": "digital"
     },
     "functions": ["set_angle"],
+    "default_value": {"name": "ANGLE", "type": "math_number", "field": "NUM", "value": 90},
     "rel_path": "Actuators\\Servo\\servo\\servo.py",
     "service_type": "mirte_msgs/SetServoAngle",
     "service_value": "angle",
@@ -64,6 +67,7 @@
        "sda": "digital"
     },
     "functions": ["set_oled"],
+    "default_value": {"name": "VALUE", "type": "text", "field": "TEXT", "value": "Hi"},
     "rel_path": "Actuators\\OLED\\oled\\oled.py",
     "service_type": "mirte_msgs/SetOLEDImage",
     "service_name": "image"
@@ -77,15 +81,5 @@
     "rel_path": "Sensors\\Keypad\\keypad\\keypad.py",
     "message_type": "mirte_msgs/Keypad",
     "message_value": "key"
-  },
-  "encoder": {
-    "text": "wheel_encoder",
-    "pins": {
-       "pin": "digital"
-    },
-    "functions": ["get_ticks"],
-    "rel_path": "Sensors\\Encoder\\encoder\\encoder.py",
-    "message_type": "mirte_msgs/Encoder",
-    "message_value": "value"
   }
 }
