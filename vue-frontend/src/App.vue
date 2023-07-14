@@ -124,11 +124,9 @@ export default {
       .then((response) => {
 		   this.$store.dispatch('setUser', response.data);
       });
-
-      var vue_this = this; // TODO: can we do this in another way?
  
       let websocket = new WebSocket('ws://' + window.location.hostname + '/ws/clients');
-      websocket.onmessage = function(event){
+      websocket.onmessage = (event) => {
          var data = JSON.parse(event.data);
          var names = [];
          if (data.length > 1){
@@ -143,8 +141,8 @@ export default {
                selected = hostname;
             }            
          }
-         vue_this.username = selected;
-         vue_this.online = names;
+         this.username = selected;
+         this.online = names;
       };
    },
    methods: {
