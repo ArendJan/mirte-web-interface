@@ -31,6 +31,7 @@ import stm32 from '@/assets/tutorials/stm32.json';
 import fibbonachi from '@/assets/tutorials/fibbonachi.json';
 
 export default {
+  name:"TutorialsView",
   data(){
     return {
       tutorials: [build, stm32, fibbonachi]

@@ -44,7 +44,6 @@
       </div>
     </div>
   </div>
-  </div>
 </template>
 
 <script>
@@ -53,6 +52,7 @@ import Sensors from '@/components/Sensors.vue';
 import Actuators from '@/components/Actuators.vue';
 
 export default {
+  name:"ControlView",
   components: {
     Sensors,
     Actuators,

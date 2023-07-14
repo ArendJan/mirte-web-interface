@@ -1,7 +1,8 @@
 <template>
   <div class="layoutbox-content">
     <div
-      v-for="sensor in getSensorTypes()"
+      v-for="(sensor, sensorIndex) in getSensorTypes()"
+      :key="sensorIndex"
       class="rounded background-green-light p-3 mb-2"
     >
       <h5>{{ $t('peripherals.' + peripherals[sensor].text) }}</h5>
@@ -15,7 +16,8 @@
 
         <div class="col-8">
           <div
-            v-for="instance in getInstancesOfSensor(sensor)"
+            v-for="(instance,instanceIndex) in getInstancesOfSensor(sensor)"
+            :key="instanceIndex"
             class="rounded background-primary p-2 text-white mb-2"
           >
             {{ instance }}: {{ sensor_values[sensor][instance] }}
@@ -28,15 +30,13 @@
 
 <script>
 import properties_ph from "../assets/json/properties_ph.json";
-import MenuButtons from '@/components/MenuButtons.vue';
 import ROSLIB from 'roslib';
 import ros from '../ws-connection/ROS-connection.js';
 import Vue from 'vue';
 
 export default {
-  name: 'Sensors',
+  name: 'SensorsComponent',
   components: {
-    MenuButtons
   },
   data() {
     return {

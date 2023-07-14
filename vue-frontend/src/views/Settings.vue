@@ -1,3 +1,4 @@
+<!-- eslint no-unused-vars: [{ "varsIgnorePattern": "data" }] -->
 <template>
   <div class="row p-4 h-100">
     <div class="col-4 h-100 p-2 offset-2">
@@ -47,7 +48,7 @@
                 :fields="fields"
                 :items="items"
               >
-                <template #head(type)="data">
+                <template #head(type)>
                   <div>
                     <b-dropdown
                       id="dropdown-1"
@@ -55,8 +56,9 @@
                       class="m-md-2"
                     >
                       <b-dropdown-item
-                        v-for="i in Object.keys(peripherals)"
+                        v-for="(i, iIndex) in Object.keys(peripherals)"
                         ref="i"
+                        :key="iIndex"
                         @click="add_item(i)"
                       >
                         {{ $t('peripherals.' + peripherals[i].text) }}
@@ -85,7 +87,8 @@
 
                 <template #cell(pins)="data">
                   <b-form-select
-                    v-for="p in Object.keys(peripherals[data.item.type].pins)"
+                    v-for="(p, pIndex) in Object.keys(peripherals[data.item.type].pins)"
+                    :key="pIndex"
                     v-model="data.item[p]"
                     :options="getValidPinBinds(data.item.type, p)"
                   >
@@ -174,6 +177,7 @@ import properties_mc from "../assets/json/properties_mc.json";
 import Network from '@/components/Network.vue';
 
 export default {
+  name:"SettingsView",
   components: {
     Network
   },

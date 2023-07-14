@@ -106,6 +106,7 @@
 // [{"ssid":"TP-LINK_2159","security":"wpa"},{"ssid":"Snelle wifi 5 euro op je muil","security":"wpa"},{"ssid":"Wifi en Adriaan","security":"wpa"},{"ssid":"ASUS_68_2G","security":"wpa"},{"ssid":"MICHAEL32","security":"wpa"},{"ssid":"DIRECT-5F-HP ENVY 7640 series","security":"wpa"},{"ssid":"DIRECT-G2DESKTOP-3CIBGTRmsMP","security":"wpa"},{"ssid":"Arashi 2.4GHz","security":"wpa"},{"ssid":"EMIL WIFI 2.4GHZ","security":"wpa"},{"ssid":"SystemMeltdown_Delft","security":"wpa"},{"ssid":"dlink","security":"wpa"},{"ssid":"edimax_2.4G_53F27E","security":"wpa"},{"ssid":"Geen wifi","security":"wpa"},{"ssid":"Cisco1905 2.4GHz","security":"wpa"},{"ssid":"Sitecom255D02","security":"wpa"},{"ssid":"Ik weet het nu wel","security":"wpa"}]
 
 export default {
+  name:"NetworkComponent",
   data: function () {
     return {
 	networks: [],

@@ -10,6 +10,7 @@ import 'codemirror/mode/python/python.js';
 import 'codemirror/lib/codemirror.css';
 
 export default {
+  name:"CodemirrorComponent",
   data: () => ({
     editor: Object
   }),

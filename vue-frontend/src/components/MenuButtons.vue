@@ -12,11 +12,11 @@
     <div class="locale-changer">
       <select v-model="lang">
         <option
-          v-for="(lang, i) in langs"
+          v-for="(langItem, i) in langs"
           :key="`Lang${i}`"
-          :value="lang"
+          :value="langItem"
         >
-          {{ lang }}
+          {{ langItem }}
         </option>
       </select>
     </div>

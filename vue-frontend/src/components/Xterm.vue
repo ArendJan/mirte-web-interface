@@ -17,6 +17,7 @@ import shell_socket from '../ws-connection/xterm-connection.js';
 import EventBus from '../event-bus';
 
 export default {
+    name: "XtermComponent",
     data: () => ({
         shell_socket: WebSocket,
         linenr_socket: WebSocket,

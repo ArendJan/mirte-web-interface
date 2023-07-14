@@ -98,7 +98,6 @@
       </div>
     </div>
   </div>
-  </div>
 </template>
 
 <script>
@@ -110,6 +109,7 @@ import Actuators from '@/components/Actuators.vue';
 import Codemirror from '@/components/Codemirror.vue';
 
 export default {
+  name:"ProgrammingView",
   components: {
     Blockly,
     ControlButtons,

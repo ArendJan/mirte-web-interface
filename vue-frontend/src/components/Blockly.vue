@@ -32,12 +32,14 @@
 
 
         <category
-          v-for="sensor in getPByKind('Sensors')"
+          v-for="(sensor, sensorIndex) in getPByKind('Sensors')"
+          :key="sensorIndex"
           :name="$t('peripherals.' + peripherals[sensor].text)"
           colour="%{BKY_SENSORS_RGB}"
         >
           <block
-            v-for="func in peripherals[sensor].functions"
+            v-for="(func, funcIndex) in peripherals[sensor].functions"
+            :key="funcIndex"
             :type="func.concat('_').concat(sensor)"
           />
         </category>
@@ -270,12 +272,14 @@
         </category>
 
         <category
-          v-for="actuator in getPByKind('Actuators')"
+          v-for="(actuator, actuatorIndex) in getPByKind('Actuators')"
+          :key="actuatorIndex"
           :name="$t('peripherals.' + peripherals[actuator].text)"
           colour="%{BKY_ACTIONS_RGB}"
         >
           <block
-            v-for="func in peripherals[actuator].functions"
+            v-for="(func, funcIndex) in peripherals[actuator].functions"
+            :key="funcIndex"
             :type="func.concat('_').concat(actuator)"
           >
             <value
@@ -364,6 +368,7 @@ const predefined_blocks = {
 };
 
 export default {
+  name: 'BlocklyComponent',
   data: () => ({
     peripherals: properties_ph,
     workspace: Object,

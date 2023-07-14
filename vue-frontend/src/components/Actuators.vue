@@ -140,12 +140,14 @@
 
 
     <div
-      v-for="actuator in getActuators()"
+      v-for="(actuator, actuatorIndex) in getActuators()"
+      :key="actuatorIndex"
       class="rounded background-green-light p-3 mb-2"
     >
       <h5>{{ $t('peripherals.' + peripherals[actuator].text) }}</h5> 
       <div
-        v-for="instance in getInstancesOfActuator(actuator)"
+        v-for="(instance, instanceIndex) in getInstancesOfActuator(actuator)"
+        :key="instanceIndex"
         class="rounded background-primary p-2 text-white mb-2"
       >
         <div v-if="actuator === 'servo'">
@@ -230,7 +232,7 @@ import Vue from 'vue';
 
 
 export default {
-  name: 'Actuators',
+  name: 'ActuatorsComponent',
   components: {
     Xterm
   },

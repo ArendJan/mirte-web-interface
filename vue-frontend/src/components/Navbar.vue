@@ -33,7 +33,7 @@
 import MenuButtons from '@/components/MenuButtons.vue';
 
 export default {
-  name: 'Navbar',
+  name: 'NavbarComponent',
   components: {
     MenuButtons
   }

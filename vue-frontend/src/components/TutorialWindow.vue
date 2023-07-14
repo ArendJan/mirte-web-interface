@@ -54,7 +54,7 @@
 
 export default {
     props: {
-        tutorial: {}
+        tutorial: {type: Object, required:true}
     },
     data(){
         return {
