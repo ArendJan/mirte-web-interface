@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "backend": "node services.js"
+    "backend": "node services.js",
+    "check": "npx semistandard",
+    "fix": "npx semistandard --fix"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
