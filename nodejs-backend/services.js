@@ -1,5 +1,5 @@
 const express = require('express');
-const pty = require('node-pty-prebuilt-multiarch');
+const pty = require('node-pty');
 const app = express();
 const expressWs = require('express-ws')(app); // TODO: decide on which websocket lib we use (probably express)
 const cors = require('cors');

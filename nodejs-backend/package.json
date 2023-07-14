@@ -17,6 +17,7 @@
     "express-ws": "^4.0.0",
     "http-proxy-middleware": "^1.0.4",
     "net": "^1.0.2",
+    "node-pty": "^1.0.0",
     "node-pty-prebuilt-multiarch": "^0.10.1-pre.4",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
