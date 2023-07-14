@@ -214,10 +214,8 @@ export default {
 </script>
 
 <style lang="scss">
-$fa-font-path: "../node_modules/@fortawesome/fontawesome-free";
-
 @import './assets/scss/main.scss';
-@import '../node_modules/bootstrap/scss/bootstrap';
-@import '../node_modules/bootstrap-vue/src/index.scss';
-@import '../node_modules/@fortawesome/fontawesome-free/css/all.css';
+@import 'bootstrap/scss/bootstrap';
+@import 'bootstrap-vue/src/index.scss';
+@import '~@fortawesome/fontawesome-free/css/all.css';
 </style>
