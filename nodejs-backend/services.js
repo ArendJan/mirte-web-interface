@@ -14,8 +14,10 @@ const flash = require('connect-flash');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const fs = require('fs');
 const os = require('os');
+const exec = require('child_process').exec;
+const execSync = require('child_process').execSync;
 
-// TODO: Currently the local-ip package is not working
+// TODO: Currently the local-ip package is not working, https://github.com/sindresorhus/internal-ip might be a good replacement for this
 function getLocalIP () {
   let address;
   const ifaces = os.networkInterfaces();
@@ -132,9 +134,6 @@ app.get('/', function (req, res, next) {
   }
 });
 
-// Serve blockly media
-app.use('/blockly-media', express.static('node_modules/blockly/media'));
-
 app.get('/api/self', (req, res) => {
   if (req.user) {
     return res.json(req.user.username);
@@ -186,7 +185,6 @@ expressWs.app.ws('/shell', (ws, req) => {
   });
 });
 
-const exec = require('child_process').exec;
 function uploadTelemetrix (res, mcu) {
   return new Promise((resolve, reject) => {
     exec('/usr/local/src/mirte/mirte-install-scripts/run_arduino.sh upload_' + mcu + ' Telemetrix4Arduino', (error, stdout, stderr) => {
@@ -213,15 +211,12 @@ app.post('/api/upload_telemetrix', async function (req, res) {
 // shutdown
 app.get('/api/shutdown', (req, res) => {
   res.end('done'); // TODO: sutdown could fail?
-  const exec = require('child_process').execSync;
   exec('sudo shutdown now');
 });
 
 // catch python files from the web interface and save them
 app.post('/api/python', (req, res) => {
   const source = req.body;
-
-  const fs = require('fs');
   fs.writeFile('/home/mirte/workdir/mirte.py', source, (err) => {
     if (err) {
       console.log(err);
@@ -235,14 +230,13 @@ app.post('/api/python', (req, res) => {
 app.post('/api/settings', (req, res) => {
   const source = req.body;
 
-  const fs = require('fs');
+  // TODO: create backup of previous config
   fs.writeFile('/home/mirte/mirte_ws/src/mirte-ros-packages/mirte_telemetrix/config/mirte_user_config.yaml', source, (err) => {
     if (err) {
       console.log(err);
       res.end('something went wrong writing the file');
     }
-    const exec = require('child_process').execFile;
-    exec('/usr/local/src/mirte/mirte-web-interface/nodejs-backend/reload_params.sh');
+    execSync('/usr/local/src/mirte/mirte-web-interface/nodejs-backend/reload_params.sh');
     res.end('done');
   });
 });
@@ -250,15 +244,6 @@ app.post('/api/settings', (req, res) => {
 // catch robot settings (ROS params) from the web interface and save them
 app.get('/api/settings', (req, res) => {
   res.download('/home/mirte/mirte_ws/src/mirte-ros-packages/mirte_telemetrix/config/mirte_user_settings.yaml');
-  /*
-      const fs = require('fs');
-      fs.readFile("/home/mirte/mirte_ws/src/mirte_ros_package/config/mirte_user_settings.yaml", function read(err, data) {
-          if(err) {
-              console.log(err);
-              res.end("something went wrong reading the file");
-          }
-          res.end(data);
-      }); */
 });
 
 // recceive command to  change the password
