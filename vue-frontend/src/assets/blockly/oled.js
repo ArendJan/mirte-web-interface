@@ -1,7 +1,7 @@
 export function load (Blockly, instances) {
 
     if (instances.length === 0) {
-        instances = [["NO PERIPHERAL CONFIGURED","NO PERIPHERAL CONFIGURED"]]
+        instances = [["NO PERIPHERAL CONFIGURED","NO PERIPHERAL CONFIGURED"]];
     }
 
     Blockly.Extensions.register('dynamic_instances_extension_oled',

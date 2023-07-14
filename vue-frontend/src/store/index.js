@@ -1,6 +1,6 @@
 
-import createPersistedState from 'vuex-persistedstate'
-import i18n, { selectedLocale } from '../i18n'
+import createPersistedState from 'vuex-persistedstate';
+import i18n, { selectedLocale } from '../i18n';
 
 export default {
 
@@ -17,25 +17,25 @@ export default {
 
     getters: {
         getCode(state) {
-            return state.code
+            return state.code;
         },
         getTutorial(state) {
-            return state.tutorial
+            return state.tutorial;
         },
         getBlockly(state) {
-            return state.blockly
+            return state.blockly;
         },
         getLinenumber(state) {
-            return state.linenumber
+            return state.linenumber;
         },
         getExecution(state) {
-            return state.execution
+            return state.execution;
         },
         getUser(state) {
-            return state.user
+            return state.user;
         },
         getPConfig(state) {
-            return JSON.parse(state.PConfig)
+            return JSON.parse(state.PConfig);
         },
         getLocal(state){
             return state.locale;
@@ -43,25 +43,25 @@ export default {
     },
     actions: {
         setCode({commit, getters}, code){
-            commit('code', code)
+            commit('code', code);
         },
         setTutorial({commit, getters}, tutorial){
-            commit('tutorial', tutorial)
+            commit('tutorial', tutorial);
         },
         setBlockly({commit, getters}, blockly){
-            commit('blockly', blockly)
+            commit('blockly', blockly);
         },
         setLinenumber({commit, getters}, linenumber){
-            commit('linenumber', linenumber)
+            commit('linenumber', linenumber);
         },
         setExecution({commit, getters}, execution){
-            commit('execution', execution)
+            commit('execution', execution);
         },
         setUser({commit, getters}, user){
-            commit('user', user)
+            commit('user', user);
         },
         setPConfig({commit, getters}, PConfig) {
-            commit('PConfig', PConfig)
+            commit('PConfig', PConfig);
         },
         setLocale({commit, getters}, locale){
             i18n.locale = locale;
@@ -70,29 +70,29 @@ export default {
     },
     mutations: {
         code(state, code) {
-            return state.code = code
+            return state.code = code;
         },
         tutorial(state, tutorial) {
-            return state.tutorial = tutorial
+            return state.tutorial = tutorial;
         },
         blockly(state, blockly) {
-            return state.blockly = blockly
+            return state.blockly = blockly;
         },
         linenumber(state, linenumber) {
-            return state.linenumber = linenumber
+            return state.linenumber = linenumber;
         },
         execution(state, execution) {
-            return state.execution = execution
+            return state.execution = execution;
         },
         user(state, user) {
-            return state.user = user
+            return state.user = user;
         },
         PConfig(state, PConfig) {
-            return state.PConfig = JSON.stringify(PConfig)
+            return state.PConfig = JSON.stringify(PConfig);
         },
         locale(state, locale){
             return state.locale = locale;
         }
     },
     plugins: [createPersistedState({ paths: ["code", "blockly", "locale"] })]
-}
+};

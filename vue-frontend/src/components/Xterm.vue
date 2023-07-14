@@ -1,14 +1,18 @@
 <template>
-    <div>
-        <div id="terminal" ref="terminal" class="xterm"></div>
-    </div>
+  <div>
+    <div
+      id="terminal"
+      ref="terminal"
+      class="xterm"
+    />
+  </div>
 </template>
 
 <script>
 import { Terminal } from 'xterm';
 import { AttachAddon } from 'xterm-addon-attach';
 import { FitAddon } from 'xterm-addon-fit';
-import shell_socket from '../ws-connection/xterm-connection.js'
+import shell_socket from '../ws-connection/xterm-connection.js';
 
 import EventBus from '../event-bus';
 
@@ -20,6 +24,71 @@ export default {
     }),
     activated: function(){
         this.term.focus();
+    },
+    mounted()  {
+        // Open the websocket connection to the backend
+        this.shell_socket = shell_socket;
+
+        // Open the websocket connection to the debugger
+        this.waitForSocketConnection();
+
+        // The terminal
+        this.term = new Terminal({theme: { background: '#e2e8e9', foreground: '#e2e8e9', cursor: '#e2e8e9' }});
+        const fitAddon = new FitAddon();
+        this.term.loadAddon(new AttachAddon(this.shell_socket));
+        this.term.loadAddon(fitAddon);
+        this.term.open(this.$refs.terminal);
+        // fitAddodn.fit() gives error
+        const dimensions = fitAddon.proposeDimensions();
+        if (!isNaN(dimensions.cols) && !isNaN(dimensions.rows)){
+           this.term.resize(dimensions.cols, dimensions.rows);
+        }
+        this.term.setOption('disableStdin', true);
+        
+        // Load env variables
+        this.shell_socket.onmessage = (ev) => {
+           if (this.$store.getters.getExecution == "disconnected") {
+              this.shell_socket.send("unset HISTFILE && stty -echo && PS1='' && clear\n");
+              this.shell_socket.send("source /home/mirte/mirte_ws/devel/setup.bash && cd /home/mirte/workdir && clear\n");
+              this.$store.dispatch('setExecution', 'stopped');
+           }
+        };
+
+        // Autoresize terminal on size change
+        const observer = new ResizeObserver(entries => {
+           //fitAddon.fit() gives error
+           const dimensions = fitAddon.proposeDimensions();
+           if (!isNaN(dimensions.cols) && !isNaN(dimensions.rows)){
+              this.term.resize(dimensions.cols, dimensions.rows);
+           }
+        });
+        observer.observe(this.$refs.terminal);
+
+        // event bus for control functions
+        EventBus.$on('control', (payload) => {
+
+            switch(payload){
+                case "play":
+                    this.term.setOption('theme', { background: '#e2e8e9', foreground: '#000000', cursor: '#e2e8e9' });
+                    this.playCode();
+                    break;
+                case "stop":
+                    this.stopCode();
+                    break;
+                case "step":
+                    this.stepCode();
+                    break;
+                case "pause":
+                    this.pauseCode();
+                    break;
+                case "clear":
+                    this.clearOutput();
+                    break;
+                case "terminal":
+                    this.toggleTerminal();
+                    break;
+            }
+        });
     },
     methods: {
         waitForSocketConnection(){
@@ -71,14 +140,14 @@ let strace_cmd = 'strace -ff -e write=1,2 -s 1024 -p ' + debugger_pid + ' 2>&1 |
                }).then(res => {
                    this.linenr_socket.send("c");
                }).catch(err => {
-                   console.log("sending failed")
-                   console.log(err)
-               })
+                   console.log("sending failed");
+                   console.log(err);
+               });
                }
         },
         stopCode() {
             this.linenr_socket.send("e");
-            this.$store.dispatch('setLinenumber', null)
+            this.$store.dispatch('setLinenumber', null);
             this.$store.dispatch('setExecution', 'stopped');
         },
         pauseCode() {
@@ -93,7 +162,7 @@ let strace_cmd = 'strace -ff -e write=1,2 -s 1024 -p ' + debugger_pid + ' 2>&1 |
             this.linenr_socket.send("e");
             this.$store.dispatch('setExecution', 'stopped');
             this.shell_socket.send("clear\n");
-            this.$store.dispatch('setLinenumber', null)
+            this.$store.dispatch('setLinenumber', null);
         },
         setTerminal(terminal){
            if (terminal){
@@ -111,72 +180,7 @@ let strace_cmd = 'strace -ff -e write=1,2 -s 1024 -p ' + debugger_pid + ' 2>&1 |
         toggleTerminal() {
             this.setTerminal(this.term.getOption('disableStdin'));
         },
-    },
-    mounted()  {
-        // Open the websocket connection to the backend
-        this.shell_socket = shell_socket;
-
-        // Open the websocket connection to the debugger
-        this.waitForSocketConnection();
-
-        // The terminal
-        this.term = new Terminal({theme: { background: '#e2e8e9', foreground: '#e2e8e9', cursor: '#e2e8e9' }});
-        const fitAddon = new FitAddon();
-        this.term.loadAddon(new AttachAddon(this.shell_socket));
-        this.term.loadAddon(fitAddon);
-        this.term.open(this.$refs.terminal);
-        // fitAddodn.fit() gives error
-        const dimensions = fitAddon.proposeDimensions();
-        if (!isNaN(dimensions.cols) && !isNaN(dimensions.rows)){
-           this.term.resize(dimensions.cols, dimensions.rows);
-        }
-        this.term.setOption('disableStdin', true);
-        
-        // Load env variables
-        this.shell_socket.onmessage = (ev) => {
-           if (this.$store.getters.getExecution == "disconnected") {
-              this.shell_socket.send("unset HISTFILE && stty -echo && PS1='' && clear\n");
-              this.shell_socket.send("source /home/mirte/mirte_ws/devel/setup.bash && cd /home/mirte/workdir && clear\n");
-              this.$store.dispatch('setExecution', 'stopped');
-           }
-        }
-
-        // Autoresize terminal on size change
-        const observer = new ResizeObserver(entries => {
-           //fitAddon.fit() gives error
-           const dimensions = fitAddon.proposeDimensions();
-           if (!isNaN(dimensions.cols) && !isNaN(dimensions.rows)){
-              this.term.resize(dimensions.cols, dimensions.rows);
-           }
-        })
-        observer.observe(this.$refs.terminal)
-
-        // event bus for control functions
-        EventBus.$on('control', (payload) => {
-
-            switch(payload){
-                case "play":
-                    this.term.setOption('theme', { background: '#e2e8e9', foreground: '#000000', cursor: '#e2e8e9' });
-                    this.playCode()
-                    break;
-                case "stop":
-                    this.stopCode()
-                    break;
-                case "step":
-                    this.stepCode()
-                    break;
-                case "pause":
-                    this.pauseCode()
-                    break;
-                case "clear":
-                    this.clearOutput()
-                    break;
-                case "terminal":
-                    this.toggleTerminal()
-                    break;
-            }
-        });
     }
 
-}
+};
 </script>

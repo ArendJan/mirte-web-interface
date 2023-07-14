@@ -1,241 +1,323 @@
 <template>
-
-
-
   <div class="h-100">
-
-    <div id="blocklyArea" ref="blocklyArea" class="blocklyArea h-100">
-      <div id="blocklyDiv" ref="blocklyDiv" style="height: 480px; width: 600px"></div>
+    <div
+      id="blocklyArea"
+      ref="blocklyArea"
+      class="blocklyArea h-100"
+    >
+      <div
+        id="blocklyDiv"
+        ref="blocklyDiv"
+        style="height: 480px; width: 600px"
+      />
     </div>
 
-    <xml id="toolbox" ref="toolbox" style="display: none">
+    <xml
+      id="toolbox"
+      ref="toolbox"
+      style="display: none"
+    >
+      <category
+        name="%{BKY_SENSORS}"
+        colour="%{BKY_SENSORS_RGB}"
+        expanded="true"
+      >
+        <category
+          name="%{BKY_ROBOT}"
+          colour="%{BKY_SENSORS_RGB}"
+        >
+          <block type="get_analog_pin_value" />
+          <block type="get_digital_pin_value" />
+        </category>
 
 
-      <category name="%{BKY_SENSORS}" colour="%{BKY_SENSORS_RGB}" expanded=true>
-
-         <category name="%{BKY_ROBOT}" colour="%{BKY_SENSORS_RGB}">
-            <block type="get_analog_pin_value"></block>
-            <block type="get_digital_pin_value"></block>
-         </category>
-
-
-        <category v-for="sensor in getPByKind('Sensors')" :name="$t('peripherals.' + peripherals[sensor].text)"
-                  colour="%{BKY_SENSORS_RGB}">
-          <block v-for="func in peripherals[sensor].functions"
-                 :type="func.concat('_').concat(sensor)">
-          </block>
+        <category
+          v-for="sensor in getPByKind('Sensors')"
+          :name="$t('peripherals.' + peripherals[sensor].text)"
+          colour="%{BKY_SENSORS_RGB}"
+        >
+          <block
+            v-for="func in peripherals[sensor].functions"
+            :type="func.concat('_').concat(sensor)"
+          />
         </category>
       </category>
 
 
 
-      <category name="%{BKY_FLOW}" colour="%{BKY_FLOW_RGB}" expanded="true">
-
-        <category name="%{BKY_LOOPS}" colour="%{BKY_FLOW_RGB}">
+      <category
+        name="%{BKY_FLOW}"
+        colour="%{BKY_FLOW_RGB}"
+        expanded="true"
+      >
+        <category
+          name="%{BKY_LOOPS}"
+          colour="%{BKY_FLOW_RGB}"
+        >
           <block type="controls_repeat_ext">
             <value name="TIMES">
               <block type="math_number">
-                <field name="NUM">10</field>
+                <field name="NUM">
+                  10
+                </field>
               </block>
             </value>
           </block>
-          <block type="controls_whileUntil"></block>
+          <block type="controls_whileUntil" />
           <block type="controls_for">
-            <field name="VAR">i</field>
+            <field name="VAR">
+              i
+            </field>
             <value name="FROM">
               <block type="math_number">
-                <field name="NUM">1</field>
+                <field name="NUM">
+                  1
+                </field>
               </block>
             </value>
             <value name="TO">
               <block type="math_number">
-                <field name="NUM">10</field>
+                <field name="NUM">
+                  10
+                </field>
               </block>
             </value>
             <value name="BY">
               <block type="math_number">
-                <field name="NUM">1</field>
+                <field name="NUM">
+                  1
+                </field>
               </block>
             </value>
           </block>
-          <block type="controls_forEach"></block>
-          <block type="controls_flow_statements"></block>
+          <block type="controls_forEach" />
+          <block type="controls_flow_statements" />
         </category>
 
-        <category name="%{BKY_TIME}" colour="%{BKY_FLOW_RGB}">
+        <category
+          name="%{BKY_TIME}"
+          colour="%{BKY_FLOW_RGB}"
+        >
           <block type="wait">
             <value name="wait">
               <block type="math_number">
-                <field name="NUM">1</field>
+                <field name="NUM">
+                  1
+                </field>
               </block>
             </value>
           </block>
-          <block type="wait_until"></block>
-          <block type="get_timestamp"></block>
+          <block type="wait_until" />
+          <block type="get_timestamp" />
         </category>
 
-        <category name="%{BKY_CONDITIONS}" colour="%{BKY_FLOW_RGB}">
-          <block type="controls_if"></block>
+        <category
+          name="%{BKY_CONDITIONS}"
+          colour="%{BKY_FLOW_RGB}"
+        >
+          <block type="controls_if" />
           <block type="controls_if">
-            <mutation else="1"></mutation>
+            <mutation else="1" />
           </block>
           <block type="controls_if">
-            <mutation elseif="1" else="1"></mutation>
+            <mutation
+              elseif="1"
+              else="1"
+            />
           </block>
         </category>
 
-        <category name="%{BKY_FUNCTIONS}" custom="PROCEDURE" colour="%{BKY_FLOW_RGB}">
-        </category>
-
+        <category
+          name="%{BKY_FUNCTIONS}"
+          custom="PROCEDURE"
+          colour="%{BKY_FLOW_RGB}"
+        />
       </category>
 
-      <category name="%{BKY_DATA}" colour="%{BKY_DATA_RGB}" expanded="true">
-
-        <category name="%{BKY_LOGIC}" colour="%{BKY_DATA_RGB}">
-          <block type="logic_compare"></block>
-          <block type="logic_operation"></block>
-          <block type="logic_negate"></block>
-          <block type="logic_boolean"></block>
-          <block type="logic_null"></block>
-          <block type="logic_ternary"></block>
+      <category
+        name="%{BKY_DATA}"
+        colour="%{BKY_DATA_RGB}"
+        expanded="true"
+      >
+        <category
+          name="%{BKY_LOGIC}"
+          colour="%{BKY_DATA_RGB}"
+        >
+          <block type="logic_compare" />
+          <block type="logic_operation" />
+          <block type="logic_negate" />
+          <block type="logic_boolean" />
+          <block type="logic_null" />
+          <block type="logic_ternary" />
         </category>
 
-        <category name="%{BKY_MATH}" colour="%{BKY_DATA_RGB}">
+        <category
+          name="%{BKY_MATH}"
+          colour="%{BKY_DATA_RGB}"
+        >
           <block type="math_number">
-            <field name="NUM">123</field>
+            <field name="NUM">
+              123
+            </field>
           </block>
-          <block type="math_arithmetic"></block>
-          <block type="math_single"></block>
-          <block type="math_trig"></block>
-          <block type="math_constant"></block>
-          <block type="math_number_property"></block>
-          <block type="math_round"></block>
-          <block type="math_on_list"></block>
-          <block type="math_modulo"></block>
+          <block type="math_arithmetic" />
+          <block type="math_single" />
+          <block type="math_trig" />
+          <block type="math_constant" />
+          <block type="math_number_property" />
+          <block type="math_round" />
+          <block type="math_on_list" />
+          <block type="math_modulo" />
           <block type="math_constrain">
             <value name="LOW">
               <block type="math_number">
-                <field name="NUM">1</field>
+                <field name="NUM">
+                  1
+                </field>
               </block>
             </value>
             <value name="HIGH">
               <block type="math_number">
-                <field name="NUM">100</field>
+                <field name="NUM">
+                  100
+                </field>
               </block>
             </value>
           </block>
           <block type="math_random_int">
             <value name="FROM">
               <block type="math_number">
-                <field name="NUM">1</field>
+                <field name="NUM">
+                  1
+                </field>
               </block>
             </value>
             <value name="TO">
               <block type="math_number">
-                <field name="NUM">100</field>
+                <field name="NUM">
+                  100
+                </field>
               </block>
             </value>
           </block>
-          <block type="math_random_float"></block>
-          <block type="math_atan2"></block>
+          <block type="math_random_float" />
+          <block type="math_atan2" />
         </category>
 
-        <category name="%{BKY_LISTS}" colour="%{BKY_DATA_RGB}">
-          <block type="lists_create_empty"></block>
-          <block type="lists_create_with"></block>
+        <category
+          name="%{BKY_LISTS}"
+          colour="%{BKY_DATA_RGB}"
+        >
+          <block type="lists_create_empty" />
+          <block type="lists_create_with" />
           <block type="lists_repeat">
             <value name="NUM">
               <block type="math_number">
-                <field name="NUM">5</field>
+                <field name="NUM">
+                  5
+                </field>
               </block>
             </value>
           </block>
-          <block type="lists_length"></block>
-          <block type="lists_isEmpty"></block>
-          <block type="lists_indexOf"></block>
-          <block type="lists_getIndex"></block>
-          <block type="lists_setIndex"></block>
+          <block type="lists_length" />
+          <block type="lists_isEmpty" />
+          <block type="lists_indexOf" />
+          <block type="lists_getIndex" />
+          <block type="lists_setIndex" />
         </category>
 
-        <category name="%{BKY_VARIABLES}" custom="VARIABLE" colour="%{BKY_DATA_RGB}">
-        </category>
-
+        <category
+          name="%{BKY_VARIABLES}"
+          custom="VARIABLE"
+          colour="%{BKY_DATA_RGB}"
+        />
       </category>
 
-      <category name="%{BKY_ACTIONS}" colour="%{BKY_ACTIONS_RGB}" expanded=true>
+      <category
+        name="%{BKY_ACTIONS}"
+        colour="%{BKY_ACTIONS_RGB}"
+        expanded="true"
+      >
+        <category
+          name="%{BKY_ROBOT}"
+          colour="%{BKY_ACTIONS_RGB}"
+        >
+          <block type="text_print">
+            <value name="TEXT">
+              <block type="text" />
+            </value>
+          </block> 
 
-         <category name="%{BKY_ROBOT}" colour="%{BKY_ACTIONS_RGB}">
+          <block type="set_analog_pin_value">
+            <value name="VALUE">
+              <block type="math_number">
+                <field name="NUM">
+                  0
+                </field>
+              </block>
+            </value>
+          </block>
 
-            <block type="text_print">
-              <value name="TEXT">
-                <block type="text"></block>
-              </value>
-            </block> 
-
-            <block type="set_analog_pin_value">
-              <value name="VALUE">
-                <block type="math_number">
-                  <field name="NUM">0</field>
-                </block>
-              </value>
-            </block>
-
-            <block type="set_digital_pin_value">
-              <value name="VALUE">
-                <block type="logic_boolean">
-                  <field name="BOOL">TRUE</field>
-                </block>
-              </value>
-
-            </block>
-
-         </category>
-
-        <category v-for="actuator in getPByKind('Actuators')" :name="$t('peripherals.' + peripherals[actuator].text)"
-                  colour="%{BKY_ACTIONS_RGB}">
-          <block v-for="func in peripherals[actuator].functions"
-                 :type="func.concat('_').concat(actuator)">
-             <value v-if="peripherals[actuator].default_value" :name="peripherals[actuator].default_value.name">
-                <block :type="peripherals[actuator].default_value.type">
-                  <field :name="peripherals[actuator].default_value.field">{{peripherals[actuator].default_value.value}}</field>
-                </block>
-              </value>
-
-
-
+          <block type="set_digital_pin_value">
+            <value name="VALUE">
+              <block type="logic_boolean">
+                <field name="BOOL">
+                  TRUE
+                </field>
+              </block>
+            </value>
           </block>
         </category>
-     </category>
 
+        <category
+          v-for="actuator in getPByKind('Actuators')"
+          :name="$t('peripherals.' + peripherals[actuator].text)"
+          colour="%{BKY_ACTIONS_RGB}"
+        >
+          <block
+            v-for="func in peripherals[actuator].functions"
+            :type="func.concat('_').concat(actuator)"
+          >
+            <value
+              v-if="peripherals[actuator].default_value"
+              :name="peripherals[actuator].default_value.name"
+            >
+              <block :type="peripherals[actuator].default_value.type">
+                <field :name="peripherals[actuator].default_value.field">
+                  {{ peripherals[actuator].default_value.value }}
+                </field>
+              </block>
+            </value>
+          </block>
+        </category>
+      </category>
     </xml>
-</div>
-
-
+  </div>
 </template>
 
 <script>
-import ROSLIB from 'roslib'
-import ros from '../ws-connection/ROS-connection.js'
-import Blockly from 'blockly'
-import 'blockly/python'
-import EventBus from '../event-bus'
-import * as NL from 'blockly/msg/nl'
-import CustomNL from "../../locales/nl.json"
-import * as EN from 'blockly/msg/en'
-import CustomEN from "../../locales/en.json"
+import ROSLIB from 'roslib';
+import ros from '../ws-connection/ROS-connection.js';
+import Blockly from 'blockly';
+import 'blockly/python';
+import EventBus from '../event-bus';
+import * as NL from 'blockly/msg/nl';
+import CustomNL from "../../locales/nl.json";
+import * as EN from 'blockly/msg/en';
+import CustomEN from "../../locales/en.json";
 
 var CombinedNL = { ...(JSON.parse(JSON.stringify(CustomNL.blockly))),  ...NL} ;
 var CombinedEN = { ...(JSON.parse(JSON.stringify(CustomEN.blockly))),  ...EN} ;
 
 var locales = { "nl": CombinedNL, "en": CombinedEN};
 
-import properties_ph from "../assets/json/properties_ph.json"
+import properties_ph from "../assets/json/properties_ph.json";
 
 //Peripheral Blockly Modules imports
-const PBM = {}
-PBM.default = require(`../assets/blockly/default_blocks.js`)
+const PBM = {};
+PBM.default = require(`../assets/blockly/default_blocks.js`);
 for (let type of Object.keys(properties_ph)) {
-  PBM[type] = require(`../assets/blockly/${type}.js`)
+  PBM[type] = require(`../assets/blockly/${type}.js`);
 }
 
 const predefined_blocks = {
@@ -279,7 +361,7 @@ const predefined_blocks = {
   lists_getIndex: "%{BKY_DATA_RGB}",
   lists_setIndex: "%{BKY_DATA_RGB}",
   text_print: "%{BKY_ACTIONS_RGB}",
-}
+};
 
 export default {
   data: () => ({
@@ -289,39 +371,76 @@ export default {
     params: {},
   }),
 
+  watch: {
+     '$i18n.locale': function(newVal, oldVal){
+        Blockly.setLocale(locales[newVal]);
+        this.refresh_blockly();
+     },
+    '$store.getters.getLinenumber':
+        function (newVal, oldVal) {
+          let blockMap = this.getBlockToLineMap(); // TODO: this should only be generated when the block change. Not while running.
+          this.highlightBlockLine(blockMap[newVal], true);
+        },
+    '$store.getters.getPConfig':
+        function (newVal, oldVal) {
+          window.location.reload();
+        },
+    '$store.getters.getBlockly':
+        function (newVal, oldVal) {
+          if (newVal != ""){
+            Blockly.mainWorkspace.clear();
+            Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(newVal), this.workspace);
+            Blockly.mainWorkspace.zoomToFit();
+            this.$store.dispatch('setBlockly', "");
+          }
+        },
+  },
+  mounted() {
+
+     let params = new ROSLIB.Param({
+       ros: ros,
+       name: '/mirte'
+     });
+
+     params.get((res) => {
+       this.params = res;
+       setTimeout(this.load_blockly, 500);
+     });
+  },
+
   methods: {
     // highlightBlockLine and getBlockToLineMap are methods which are used in marking
     // the blocks where the execution is currently at (the line number of it).
     getBlockToLineMap: function () {
-      const blockMap = {}
-      const offset = (this.prefix.match(/\n/g) || []).length + 1
-      Blockly.Python.STATEMENT_PREFIX = "blockID: %1"
-      const code = Blockly.Python.workspaceToCode(this.workspace)
-      let codeLines = code.split("\n")
+      const blockMap = {};
+      const offset = (this.prefix.match(/\n/g) || []).length + 1;
+      Blockly.Python.STATEMENT_PREFIX = "blockID: %1";
+      const code = Blockly.Python.workspaceToCode(this.workspace);
+      let codeLines = code.split("\n");
       for (let i = 0; i < codeLines.length; i++) {
-        let line = codeLines[i].trim()
-        let blockIdStr = line.lastIndexOf("blockID: ")
+        let line = codeLines[i].trim();
+        let blockIdStr = line.lastIndexOf("blockID: ");
         if (blockIdStr >= 0) {
-          line = line.substr(blockIdStr)
-          blockMap[i + offset] = line.substr(10, 20)
+          line = line.substr(blockIdStr);
+          blockMap[i + offset] = line.substr(10, 20);
         }
       }
-      Blockly.Python.STATEMENT_PREFIX = ""
-      return blockMap
+      Blockly.Python.STATEMENT_PREFIX = "";
+      return blockMap;
     },
     highlightBlockLine: function (blockId, isParent) {
       if (isParent) {
-        this.workspace.highlightBlock(blockId)
+        this.workspace.highlightBlock(blockId);
       } else {
-        this.workspace.highlightBlock(blockId, true)
+        this.workspace.highlightBlock(blockId, true);
       }
-      let curBlock = this.workspace.getBlockById(blockId)
+      let curBlock = this.workspace.getBlockById(blockId);
       if (curBlock) {
-        let children = curBlock.getChildren()
-        let blockMap = this.getBlockToLineMap() // TODO: this should only be generated when the block change. Not while running.
+        let children = curBlock.getChildren();
+        let blockMap = this.getBlockToLineMap(); // TODO: this should only be generated when the block change. Not while running.
         for (let child = 0; child < children.length; child++) {
           if (Object.values(blockMap).indexOf(children[child].id) === -1) {
-            this.highlightBlockLine(children[child].id, false)
+            this.highlightBlockLine(children[child].id, false);
           }
         }
       }
@@ -344,14 +463,14 @@ export default {
            localStorage.setItem("blockly", xml_text);
 
            // update the store
-           this.$store.dispatch('setCode', code)
+           this.$store.dispatch('setCode', code);
            // this.$store.dispatch('setBlockly', xml_text)
          }
        });
     },
     //separates peripheral items into sensors and actuators
     getPByKind(kind) {
-      const AP = new Set()
+      const AP = new Set();
 
       for (let type in this.params){
          for (let instance in this.params[type]){
@@ -359,11 +478,11 @@ export default {
                 type = "motor_" + this.params["motor"][Object.keys(this.params["motor"])[0]].type;
              }
              if (this.peripherals.hasOwnProperty(type) && this.peripherals[type].rel_path.split("\\")[0] == kind ){
-                 AP.add(type)
+                 AP.add(type);
              }
          }
       }
-      return AP
+      return AP;
     },
     // Loads in imported blockly modules block definitions
     load_blockly_modules() {
@@ -379,7 +498,7 @@ export default {
         }
 
         if (this.params.hasOwnProperty(pbm2)){
-           let items = []
+           let items = [];
            for (const [key, value] of Object.entries(this.params[pbm2])) {
              if (pbm2 != "motor" || value.type == pbm.substr(6)){
                // We use [T.name, T.name] here because the dropdown menu generator
@@ -387,7 +506,7 @@ export default {
                items.push([value.name, value.name]);
              }
            }
-           PBM[pbm].load(Blockly, items )
+           PBM[pbm].load(Blockly, items );
         }
 
 
@@ -424,17 +543,17 @@ export default {
     load_blockly(){
 
       // Blockly configuration
-      Blockly.setLocale(locales[this.$i18n.locale])
+      Blockly.setLocale(locales[this.$i18n.locale]);
       // Palette generated by: https://coolors.co/5a7574-cfd186-e3655b-52414c-5b8c5a-57467b
-      Blockly.Msg.FLOW_RGB = "#e3655b"
-      Blockly.Msg.DATA_RGB = "#52414c"
-      Blockly.Msg.MODULES_RGB = "#cfd186"
-      Blockly.Msg.SENSORS_RGB = "#5b8c5a"
-      Blockly.Msg.ACTIONS_RGB = "#57467b"
+      Blockly.Msg.FLOW_RGB = "#e3655b";
+      Blockly.Msg.DATA_RGB = "#52414c";
+      Blockly.Msg.MODULES_RGB = "#cfd186";
+      Blockly.Msg.SENSORS_RGB = "#5b8c5a";
+      Blockly.Msg.ACTIONS_RGB = "#57467b";
   
       // workspace initialization
-      const blocklyArea = this.$refs.blocklyArea
-      const blocklyDiv = this.$refs.blocklyDiv
+      const blocklyArea = this.$refs.blocklyArea;
+      const blocklyDiv = this.$refs.blocklyDiv;
       this.workspace = Blockly.inject(blocklyDiv, {
         toolbox: this.$refs.toolbox,
         media: 'blockly-media/',
@@ -447,32 +566,32 @@ export default {
           scaleSpeed: 1.2
         },
         renderer: 'zelos'
-      })
+      });
 
       // workspace configuration
-      this.workspace.toolbox_.flyout_.autoClose = false
+      this.workspace.toolbox_.flyout_.autoClose = false;
   
       // Window resize listener
       const onresize = (e) => {
         // Compute the absolute coordinates and dimensions of blocklyArea.
-        let element = blocklyArea
-        let x = 0
-        let y = 0
+        let element = blocklyArea;
+        let x = 0;
+        let y = 0;
         // Sums over all the elements' parents offsets
         do {
-          x += element.offsetLeft
-          y += element.offsetTop
-          element = element.offsetParent
-        } while (element)
+          x += element.offsetLeft;
+          y += element.offsetTop;
+          element = element.offsetParent;
+        } while (element);
         // Position blocklyDiv over blocklyArea.
-        blocklyDiv.style.left = x + 'px'
-        blocklyDiv.style.top = y + 'px'
-        blocklyDiv.style.width = blocklyArea.offsetWidth + 'px'
-        blocklyDiv.style.height = blocklyArea.offsetHeight + 'px'
-        Blockly.svgResize(this.workspace)
-      }
-      window.addEventListener('resize', onresize, false)
-      onresize()
+        blocklyDiv.style.left = x + 'px';
+        blocklyDiv.style.top = y + 'px';
+        blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
+        blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
+        Blockly.svgResize(this.workspace);
+      };
+      window.addEventListener('resize', onresize, false);
+      onresize();
   
       this.refresh();
 
@@ -481,73 +600,36 @@ export default {
       EventBus.$on('control', (payload) => {
         switch (payload) {
           case "undo":
-            this.workspace.undo(false)
-            break
+            this.workspace.undo(false);
+            break;
           case "redo":
-            this.workspace.undo(true)
-            break
+            this.workspace.undo(true);
+            break;
         }
-      })
+      });
   
       // Recolor predefined Blocks
       for (const [key, value] of Object.entries(predefined_blocks)) {
         //https://groups.google.com/forum/#!topic/blockly/yUBEymLKBbk
-        const blk = Blockly.Blocks[key]
-        const oldInit = blk.init
+        const blk = Blockly.Blocks[key];
+        const oldInit = blk.init;
         blk.init = function () {
-          oldInit.call(this)
-          this.setColour(value)
-        }
+          oldInit.call(this);
+          this.setColour(value);
+        };
       }
 
       this.load_blockly_modules();
 
-      const storage = localStorage.getItem("blockly")
+      const storage = localStorage.getItem("blockly");
       if (storage !== null) {
-        Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(storage), this.workspace)
+        Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(storage), this.workspace);
       }
 
     }
    
-  },
-
-  watch: {
-     '$i18n.locale': function(newVal, oldVal){
-        Blockly.setLocale(locales[newVal]);
-        this.refresh_blockly();
-     },
-    '$store.getters.getLinenumber':
-        function (newVal, oldVal) {
-          let blockMap = this.getBlockToLineMap() // TODO: this should only be generated when the block change. Not while running.
-          this.highlightBlockLine(blockMap[newVal], true)
-        },
-    '$store.getters.getPConfig':
-        function (newVal, oldVal) {
-          window.location.reload()
-        },
-    '$store.getters.getBlockly':
-        function (newVal, oldVal) {
-          if (newVal != ""){
-            Blockly.mainWorkspace.clear()
-            Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(newVal), this.workspace)
-            Blockly.mainWorkspace.zoomToFit()
-            this.$store.dispatch('setBlockly', "")
-          }
-        },
-  },
-  mounted() {
-
-     let params = new ROSLIB.Param({
-       ros: ros,
-       name: '/mirte'
-     })
-
-     params.get((res) => {
-       this.params = res;
-       setTimeout(this.load_blockly, 500);
-     })
   }
-}
+};
 
 
 </script>

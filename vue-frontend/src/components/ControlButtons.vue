@@ -1,77 +1,137 @@
 <template>
-    <div>
-        <button :disabled="isUndoDisabled" class="btn btn-outline-light mr-2"
-            v-b-tooltip.hover
-            :title="$t('programming.undo')"
-            @click="control('undo')"
-        >
-            <i class="fas fa-undo"></i>
-        </button>
+  <div>
+    <button
+      v-b-tooltip.hover
+      :disabled="isUndoDisabled"
+      class="btn btn-outline-light mr-2"
+      :title="$t('programming.undo')"
+      @click="control('undo')"
+    >
+      <i class="fas fa-undo" />
+    </button>
 
-        <button :disabled="isRedoDisabled" class="btn btn-outline-light mr-2"
-            v-b-tooltip.hover 
-            :title="$t('programming.redo')"
-            @click="control('redo')"
-        >
-            <i class="fa fa-redo"></i>
-        </button>
+    <button
+      v-b-tooltip.hover
+      :disabled="isRedoDisabled"
+      class="btn btn-outline-light mr-2" 
+      :title="$t('programming.redo')"
+      @click="control('redo')"
+    >
+      <i class="fa fa-redo" />
+    </button>
 
-        <span class="nav-spacer"></span>
+    <span class="nav-spacer" />
 
-        <span v-b-tooltip :title="$t('programming.start')" style="display: inline-block;">
-        <button :disabled="isPlayDisabled" class="btn btn-outline-light mx-2" 
-            @click="control('play')">
-            <i class="fas fa-play"></i>
-        </button>
-        </span>
+    <span
+      v-b-tooltip
+      :title="$t('programming.start')"
+      style="display: inline-block;"
+    >
+      <button
+        :disabled="isPlayDisabled"
+        class="btn btn-outline-light mx-2" 
+        @click="control('play')"
+      >
+        <i class="fas fa-play" />
+      </button>
+    </span>
 
-        <span v-b-tooltip :title="$t('programming.pause')" style="display: inline-block;">
-        <button :disabled="isPauseDisabled" 
-            @click="control('pause')" class="btn btn-outline-light mr-2">
-            <i class="fa fa-pause"></i>
-        </button>
-        </span>
+    <span
+      v-b-tooltip
+      :title="$t('programming.pause')"
+      style="display: inline-block;"
+    >
+      <button
+        :disabled="isPauseDisabled" 
+        class="btn btn-outline-light mr-2"
+        @click="control('pause')"
+      >
+        <i class="fa fa-pause" />
+      </button>
+    </span>
 
-        <span v-b-tooltip :title="$t('programming.step')" style="display: inline-block;">
-        <button :disabled="isStepDisabled" class="btn btn-outline-light mr-2" 
-            @click="control('step')">
-            <i class="fa fa-step-forward"></i>
-        </button>
-        </span>
+    <span
+      v-b-tooltip
+      :title="$t('programming.step')"
+      style="display: inline-block;"
+    >
+      <button
+        :disabled="isStepDisabled"
+        class="btn btn-outline-light mr-2" 
+        @click="control('step')"
+      >
+        <i class="fa fa-step-forward" />
+      </button>
+    </span>
 
-        <span v-b-tooltip :title="$t('programming.stop')" style="display: inline-block;">
-	<button :disabled="isStopDisabled" class="btn btn-outline-light mr-2" 
-            @click="control('stop')">
-            <i class="fa fa-stop"></i>
-        </button>
-        </span>
+    <span
+      v-b-tooltip
+      :title="$t('programming.stop')"
+      style="display: inline-block;"
+    >
+      <button
+        :disabled="isStopDisabled"
+        class="btn btn-outline-light mr-2" 
+        @click="control('stop')"
+      >
+        <i class="fa fa-stop" />
+      </button>
+    </span>
 
-        <span class="nav-spacer"></span>
+    <span class="nav-spacer" />
 
-        <button href="#" class="btn btn-outline-light mx-2" 
-            v-b-tooltip.hover 
-            :title="$t('programming.save')" 
-            @click="download"
-        >
-            <i class="fa fa-save"></i>
-        </button>
+    <button
+      v-b-tooltip.hover
+      href="#" 
+      class="btn btn-outline-light mx-2" 
+      :title="$t('programming.save')" 
+      @click="download"
+    >
+      <i class="fa fa-save" />
+    </button>
 
-        <button class="btn btn-outline-light mr-2" 
-            v-b-tooltip.hover 
-            :title="$t('programming.open')" 
-            @click="openFileWindow"
-        >
-            <i class="fa fa-folder-open"></i>
-            <input ref="file_input" @change="upload" type="file" name="name" style="display: none;" />
-        </button>
-
-    </div>
+    <button
+      v-b-tooltip.hover 
+      class="btn btn-outline-light mr-2" 
+      :title="$t('programming.open')" 
+      @click="openFileWindow"
+    >
+      <i class="fa fa-folder-open" />
+      <input
+        ref="file_input"
+        type="file"
+        name="name"
+        style="display: none;"
+        @change="upload"
+      >
+    </button>
+  </div>
 </template>
 
 <script>
 import EventBus from '../event-bus';
 
 export default {
+    computed: {
+       isUndoDisabled: function(){
+           return false; // TODO: determine strategy 
+       },
+       isRedoDisabled: function(){
+           return false; // TODO: determine strategy
+       },
+       isPlayDisabled: function(){
+          return this.$store.getters.getExecution == "running" || this.$store.getters.getExecution == "disconnected";
+       },
+       isPauseDisabled: function(){
+          return this.$store.getters.getExecution != "running" || this.$store.getters.getExecution == "disconnected";
+       },
+       isStepDisabled: function(){
+          return this.$store.getters.getExecution == "stopped" || this.$store.getters.getExecution == "disconnected";
+       },
+       isStopDisabled: function(){
+          return this.$store.getters.getExecution == "stopped" || this.$store.getters.getExecution == "disconnected";
+       }
+    },
 
     methods: {
         control(command) {
@@ -80,16 +140,16 @@ export default {
 
         openFileWindow(){
             this.$refs.file_input.value = null;
-            this.$refs.file_input.click()
+            this.$refs.file_input.click();
         },
 
         upload(){
             var fr=new FileReader(); 
 
             fr.onload = () => { 
-                console.log(fr.result)
-                this.$store.dispatch('setBlockly', fr.result)
-            } 
+                console.log(fr.result);
+                this.$store.dispatch('setBlockly', fr.result);
+            }; 
 
             if(this.$refs.file_input.files.length > 0){
                 fr.readAsText(this.$refs.file_input.files[0]); 
@@ -115,27 +175,7 @@ export default {
         },
 
 
-    },
-    computed: {
-       isUndoDisabled: function(){
-           return false; // TODO: determine strategy 
-       },
-       isRedoDisabled: function(){
-           return false; // TODO: determine strategy
-       },
-       isPlayDisabled: function(){
-          return this.$store.getters.getExecution == "running" || this.$store.getters.getExecution == "disconnected";
-       },
-       isPauseDisabled: function(){
-          return this.$store.getters.getExecution != "running" || this.$store.getters.getExecution == "disconnected";
-       },
-       isStepDisabled: function(){
-          return this.$store.getters.getExecution == "stopped" || this.$store.getters.getExecution == "disconnected";
-       },
-       isStopDisabled: function(){
-          return this.$store.getters.getExecution == "stopped" || this.$store.getters.getExecution == "disconnected";
-       }
     }
 
-}
+};
 </script>

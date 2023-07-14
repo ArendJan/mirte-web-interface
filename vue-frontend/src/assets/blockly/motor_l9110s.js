@@ -1,7 +1,7 @@
 export function load (Blockly, instances) {
 
     if (instances.length === 0) {
-        instances = [["NO PERIPHERAL CONFIGURED","NO PERIPHERAL CONFIGURED"]]
+        instances = [["NO PERIPHERAL CONFIGURED","NO PERIPHERAL CONFIGURED"]];
     }
 
     Blockly.Extensions.register('dynamic_instances_extension_l9110s',
@@ -39,7 +39,7 @@ export function load (Blockly, instances) {
     Blockly.Python['set_speed_motor_l9110s'] = function (block) {
         Blockly.Python.definitions_['import_mirte'] = 'from mirte_robot import robot\nmirte=robot.createRobot()';
         let instance = block.getFieldValue('INSTANCE');
-        let speed = Blockly.Python.valueToCode(block, 'SPEED', Blockly.Python.ORDER_ATOMIC)
+        let speed = Blockly.Python.valueToCode(block, 'SPEED', Blockly.Python.ORDER_ATOMIC);
         return `mirte.setMotorSpeed('${instance}', ${speed})\n`;
     };
 

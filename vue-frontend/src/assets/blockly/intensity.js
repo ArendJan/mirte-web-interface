@@ -1,7 +1,7 @@
 export function load (Blockly, instances) {
 
     if (instances.length === 0) {
-        instances = [["NO PERIPHERAL CONFIGURED","NO PERIPHERAL CONFIGURED"]]
+        instances = [["NO PERIPHERAL CONFIGURED","NO PERIPHERAL CONFIGURED"]];
     }
 
     Blockly.Extensions.register('dynamic_instances_extension_intensity',
@@ -33,6 +33,6 @@ export function load (Blockly, instances) {
       Blockly.Python.definitions_['import_mirte'] = 'from mirte_robot import robot\nmirte=robot.createRobot()';
       let instance = block.getFieldValue('INSTANCE');
       let code = `mirte.getIntensity('${instance}')`;
-      return [code, Blockly.Python.ORDER_NONE]
+      return [code, Blockly.Python.ORDER_NONE];
     };
 }

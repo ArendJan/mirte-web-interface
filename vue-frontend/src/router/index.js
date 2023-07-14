@@ -1,12 +1,12 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
 
-import Programming from '../views/Programming.vue'
-import Settings from '../views/Settings.vue'
-import Control from '../views/Control.vue'
-import Tutorials from '../views/Tutorials.vue'
+import Programming from '../views/Programming.vue';
+import Settings from '../views/Settings.vue';
+import Control from '../views/Control.vue';
+import Tutorials from '../views/Tutorials.vue';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
@@ -29,10 +29,10 @@ const routes = [
     name: 'Tutorials',
     component: Tutorials
   },
-]
+];
 
 const router = new VueRouter({
   routes
-})
+});
 
-export default router
+export default router;

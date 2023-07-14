@@ -1,64 +1,103 @@
 <template>
-	<div>
-        <div class="container">
+  <div>
+    <div class="container">
+      <div class="layoutbox rounded">
+        <div class="text-white p-2 h3 layoutbox-title w-100 background-primary">
+          {{ $t('settings.wifi_header') }}
+        </div>
 
-
-			<div class="layoutbox rounded">
-				<div class="text-white p-2 h3 layoutbox-title w-100 background-primary">
-					{{ $t('settings.wifi_header') }}
-				</div>
-
-				<div class="layoutbox-content">
-
-					<div class="row before-submit">
-						<div class="col">
-							<form class="form form-horizontal" id='connect-form' :action="`http://${hostname}/wifi-connect/connect`" method='post'>
-								<div class="form-group">
-									<label for="ssid-select" class="control-label col">{{ $t('settings.wifi_network') }}</label>
-									<div class="col">
-										<select id='ssid-select' class="form-control" name='ssid' @change="onChange($event)" v-model="selected.ssid">
-											<option v-for="n of networks" v-bind:key="n.ssid" :value="n.ssid" :data-security="n.security">{{n.ssid}}</option>
-										</select>
-									</div>
-								</div>
-								<div v-show="security == 'enterprise'" class="form-group" id="identity-group">
-									<label for="identity" class="control-label col">{{ $t('settings.wifi_user') }}</label>
-									<div class="col">
-										<input class="form-control" name="identity" v-model="selected.identity"/>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="passphrase" class="control-label col">{{ $t('settings.wifi_password') }}</label>
-									<div class="col">
-
-					
-									<input :type="passwordFieldType" class="form-control" name="passphrase" v-model="selected.password">
-									<!-- shows the password -->
-									<a @click="toggleVisibility()" >hide/show</a>
-
-
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="col">
-										<button @click="connect" type="button" class="btn btn-success">{{ $t('settings.wifi_connect') }}</button>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
-					<div class="row hidden" id='submit-message'>
-						<div class="col">
-                                                     {{ $t('settings.wifi_message') }}
-						</div>
-					</div>
-
-				</div>
-			</div>
-
-
-		</div>
-	</div>
+        <div class="layoutbox-content">
+          <div class="row before-submit">
+            <div class="col">
+              <form
+                id="connect-form"
+                class="form form-horizontal"
+                :action="`http://${hostname}/wifi-connect/connect`"
+                method="post"
+              >
+                <div class="form-group">
+                  <label
+                    for="ssid-select"
+                    class="control-label col"
+                  >{{ $t('settings.wifi_network') }}</label>
+                  <div class="col">
+                    <select
+                      id="ssid-select"
+                      v-model="selected.ssid"
+                      class="form-control"
+                      name="ssid"
+                      @change="onChange($event)"
+                    >
+                      <option
+                        v-for="n of networks"
+                        :key="n.ssid"
+                        :value="n.ssid"
+                        :data-security="n.security"
+                      >
+                        {{ n.ssid }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  v-show="security == 'enterprise'"
+                  id="identity-group"
+                  class="form-group"
+                >
+                  <label
+                    for="identity"
+                    class="control-label col"
+                  >{{ $t('settings.wifi_user') }}</label>
+                  <div class="col">
+                    <input
+                      v-model="selected.identity"
+                      class="form-control"
+                      name="identity"
+                    >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label
+                    for="passphrase"
+                    class="control-label col"
+                  >{{ $t('settings.wifi_password') }}</label>
+                  <div class="col">
+                    <input
+                      v-model="selected.password"
+                      :type="passwordFieldType"
+                      class="form-control"
+                      name="passphrase"
+                    >
+                    <!-- shows the password -->
+                    <a @click="toggleVisibility()">hide/show</a>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col">
+                    <button
+                      type="button"
+                      class="btn btn-success"
+                      @click="connect"
+                    >
+                      {{ $t('settings.wifi_connect') }}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div
+            id="submit-message"
+            class="row hidden"
+          >
+            <div class="col">
+              {{ $t('settings.wifi_message') }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -74,14 +113,27 @@ export default {
 	hostname: "",
         selected: {password: "", ssid: "", identity: ""},
         passwordFieldType: "password"
-    }
+    };
+  },
+  mounted(){
+    
+    fetch(`http://${location.hostname}/wifi-connect/networks`, {
+        "method": "GET",
+        "mode": "cors"})
+    .then(res => res.json())
+    .then(data => {
+		this.networks = data.filter(v=>v.ssid!="");
+        });
+
+	this.hostname = location.hostname;
+
   },
   methods: {
 		onChange: function(event) {
 			this.security = event.target.options[event.target.options.selectedIndex].dataset.security;
 		}, 
 		toggleVisibility() {
-			this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'
+			this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
 		},
 		connect() {
 				var data = new FormData();
@@ -99,20 +151,7 @@ export default {
 
 		}
 
-  },
-  mounted(){
-    
-    fetch(`http://${location.hostname}/wifi-connect/networks`, {
-        "method": "GET",
-        "mode": "cors"})
-    .then(res => res.json())
-    .then(data => {
-		this.networks = data.filter(v=>v.ssid!="");
-        });
-
-	this.hostname = location.hostname
-
   }
-}
+};
 </script>
 
