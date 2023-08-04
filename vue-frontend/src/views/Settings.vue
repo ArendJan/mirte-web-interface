@@ -3,28 +3,15 @@
   <div class="row p-4 h-100">
     <div class="col-4 h-100 p-2 offset-2">
       <div class="row h-100">
-        <div
-          class="col-12 h-100"
-          style="overflow: hidden;"
-        >
-          <div
-            class="layoutbox rounded h-100"
-            style="overflow: hidden; display: flex; flex-flow: column;"
-          >
-            <div class="text-white p-2 h3 layoutbox-title w-100 background-primary">
-              {{ $t('settings.wiring') }}
-              <button
-                type="button"
-                class="btn btn-danger float-right"
-                @click="uploadYAML"
-              >
-                <span v-if="!busy">{{ $t('settings.save') }}</span>
-                <i
-                  v-else
-                  class="fa fa-spin fa-stroopwafel"
-                />
-              </button>
-            </div>
+       <div class="col-12 h-100" style="overflow: hidden;">
+        <div class="layoutbox rounded h-100" style="overflow: hidden; display: flex; flex-flow: column;">
+          <div class="text-white p-2 h3 layoutbox-title w-100 background-primary">
+            {{ $t('settings.wiring') }}
+            <button @click="uploadYAML" type="button" class="btn btn-danger float-right">
+              <span v-if="!busy">{{ $t('settings.save') }}</span>
+              <i v-else class="fa fa-spin fa-stroopwafel"></i>
+            </button>
+          </div>
 
             <!--
   In this div the peripheral selection functionality is provided.
@@ -114,50 +101,39 @@
       <div class="row">
         <div class="col-12">
           <div class="layoutbox rounded">
-            <div class="text-white p-2 h3 layoutbox-title w-100 background-primary">
-              {{ $t('settings.microcontroller') }}
-            </div>
 
-            <div class="layoutbox-content">
-              <div class="row">
-                <b-form-radio
-                  v-model="mcu"
-                  value="pico"
-                  data-label="Raspberry Pi Pico"
-                >
-                  Raspberry Pi Pico
-                </b-form-radio>
-              </div>
-              <div class="row">
-                <b-form-radio
-                  v-model="mcu"
-                  value="nano"
-                  data-label="Arduino Nano"
-                >
-                  Arduino Nano
-                </b-form-radio>
-              </div>
-              <div class="row">
-                <b-form-radio
-                  v-model="mcu"
-                  value="nano_old"
-                  data-label="Arduino Nano (old bootloader)"
-                >
-                  Arduino Nano (old bootloader)
-                </b-form-radio>
-              </div>
-              <div class="row">
-                <b-form-radio
-                  v-model="mcu"
-                  value="uno"
-                  data-label="Arduino Uno)"
-                >
-                  Arduino Uno
-                </b-form-radio>
-              </div>
-            </div>
+          <div class="text-white p-2 h3 layoutbox-title w-100 background-primary">
+            {{ $t('settings.microcontroller') }}
           </div>
-        </div>
+
+        <div class="layoutbox-content">
+          <div class="row">
+              <b-form-radio v-model="mcu" value="pico" data-label="Raspberry Pi Pico">
+                Raspberry Pi Pico
+              </b-form-radio>
+          </div>
+          <div class="row">
+              <b-form-radio v-model="mcu" value="nano" data-label="Arduino Nano">
+                Arduino Nano
+              </b-form-radio>
+          </div>
+          <div class="row">
+              <b-form-radio v-model="mcu" value="nano_old" data-label="Arduino Nano (old bootloader)">
+                Arduino Nano (old bootloader)
+              </b-form-radio>
+          </div>
+          <div class="row">
+              <b-form-radio v-model="mcu" value="uno" data-label="Arduino Uno)">
+               Arduino Uno
+              </b-form-radio>
+          </div>
+         </div>
+
+         </div>
+       </div>
+
+
+
       </div>
 
       <div class="row">
@@ -185,8 +161,8 @@ export default {
     return {
       peripherals: properties_ph,
       microcontrollers: properties_mc,
-      board: 'breadboard',
-      mcu: "pico",
+      type: 'breadboard',
+      board: 'pico',
       fields: [
         {key: 'type', label: 'type'},
         {key: 'name', label: 'Naam'},
@@ -235,9 +211,9 @@ export default {
     },
     // Depending on selected microcontroller gives peripheral configuration table valid pin binds
     getValidPinBinds(type, pin) {
-      let pinMap = Object.entries({...this.microcontrollers[this.mcu].pin_map});
+      let pinMap = Object.entries({...this.microcontrollers[this.mcu].pin_map})
       if (this.peripherals[type].pins[pin] === "analog") {
-        pinMap = pinMap.filter(([_, value]) => value >= this.microcontrollers[this.mcu].analog_offset);
+        pinMap = pinMap.filter(([_, value]) => value >= this.microcontrollers[this.mcu].analog_offset)
       }
       const options = [];
       for (let p of pinMap) options.push({value: p[0], text: p[0]});
@@ -248,11 +224,11 @@ export default {
       this.items = [];
       for (var j in rosparams){
 	 if (j == "device"){
-            this.mcu = rosparams['device']['mirte']['mcu'];
+            this.board = rosparams['device']['mirte']['board'];
          } else {
 	    for (var k in rosparams[j]){
                if(j == "motor"){
-                 this.add_item("motor_" + rosparams[j][k]['type'], k, rosparams[j][k]['pins']);
+                 this.add_item(rosparams[j][k]['type'] + "_motor", k, rosparams[j][k]['pins']);
                } else {
                  this.add_item(j, k, rosparams[j][k]['pins']);
                }
@@ -265,7 +241,7 @@ export default {
        var tthis = this;
        tthis.params_busy = true;
        var restructured = {device: {}};
-       restructured['device']['mirte'] = {type: this.board, mcu: this.mcu };
+       restructured['device']['mirte'] = {type: this.type, board: this.board };
        for (var j in this.items){
           var i = Object.assign({}, this.items[j]);
           var type = i['type'];
@@ -273,15 +249,15 @@ export default {
           delete i['type'];
           var newtype = type;
           if (type == 'motor_l9110s'){
-             i['type'] = "l9110s";
-             newtype = "motor";
+             i['type'] = "l9110s"
+             newtype = "motor"
           }
           if (type == 'motor_l298n'){
-             i['type'] = "l298n";
-             newtype = "motor";
+             i['type'] = "l298n"
+             newtype = "motor"
           }
           if (this.board == "mirte_pcb"){
-             delete i['pins'];
+             delete i['pins']
           } else {
              delete i['connector'];
           }
@@ -307,11 +283,11 @@ export default {
     generateYAML() {
       const yaml = {
         name: 'Mirte',
-        type: this.board,
-        mcu: {
-          type: this.mcu,
-          max_pwm_value: this.microcontrollers[this.mcu].max_pwm_value,
-          analog_offset: this.microcontrollers[this.mcu].analog_offset
+        type: this.type,
+        board: {
+          board: this.board,
+          max_pwm_value: this.microcontrollers[this.board].max_pwm_value,
+          analog_offset: this.microcontrollers[this.board].analog_offset
         },
         peripherals: {}
       };
@@ -348,7 +324,6 @@ export default {
             });
       }
     },
-
     //Old out of scope server request functions
     uploadMCU() {
       if (confirm(this.$i18n.t('settings.upload_confirm'))) {

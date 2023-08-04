@@ -1,16 +1,13 @@
 <template>
-  <div class="row p-4 h-100">
-    <div
-      class="col-3 p-2 h-100 offset-3"
-      style="overflow: hidden;"
-    > 
-      <div
-        class="layoutbox rounded h-100"
-        style="overflow: hidden; display: flex; flex-flow: column;"
-      >
-        <div class="text-white p-2 h3 m-0 layoutbox-title w-100 background-primary">
-          {{ $t('main.sensors') }}
-        </div>
+
+
+       <div class="row p-4 h-100">
+         <div class="col-3 p-2 h-100 offset-3" style="overflow: hidden;"> 
+             <div class="layoutbox rounded h-100" style="overflow: hidden; display: flex; flex-flow: column;">
+
+                <div class="text-black p-2 h3 m-0 layoutbox-title w-100 background-secondary">
+                   {{ $t('main.sensors') }}
+                </div>
                   
            
         <div
@@ -22,17 +19,9 @@
       </div>
     </div> 
 
-    <div
-      class="col-3 p-2 h-100"
-      style="overflow: hidden;"
-    > 
-      <div
-        class="layoutbox rounded h-100"
-        style="overflow: hidden; display: flex; flex-flow: column;"
-      >
-        <div class="text-white p-2 h3 m-0 layoutbox-title w-100 background-primary">
-          {{ $t('main.actuators') }}
-        </div>
+                <div class="text-black p-2 h3 m-0 layoutbox-title w-100 background-secondary">
+                   {{ $t('main.actuators') }}
+                </div>
                   
            
         <div

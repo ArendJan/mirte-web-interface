@@ -1,9 +1,9 @@
 
 .xterm{
-    background-color: black;
+    background-color: $white;
     width: 100%;
     height: 30vh;
-    color: white;
+    color: $white;
 }
 
 .xterm {
@@ -64,7 +64,7 @@
 
 .xterm .xterm-viewport {
     /* On OS X this is required in order for the scroll bar to appear fully opaque */
-    background-color: #000;
+    background-color: $white;
     overflow-y: scroll;
     cursor: default;
     position: absolute;

@@ -124,47 +124,55 @@ export function load(Blockly) {
     };
 
 
-
-
     Blockly.Blocks['wait'] = {
         init: function () {
-            this.appendValueInput("wait")
-                .setCheck("Number")
-                .appendField("wacht ");
-            this.appendDummyInput()
-                .appendField("seconden");
-            this.setInputsInline(true);
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour("%{BKY_FLOW_RGB}");
-            this.setTooltip("");
-            this.setHelpUrl("");
+            this.jsonInit({
+                  "type": "block_type",
+                  "message0": "%{BKY_WAIT}",
+                  "args0": [
+                    {
+                      "type": "input_value",
+                      "name": "VALUE",
+                      "check": "Number"
+                    },
+                  ],
+                  "inputsInline": true,
+                  "previousStatement": null,
+                  "nextStatement": null,
+                  "colour": "%{BKY_FLOW_RGB}"
+             });
         }
     };
 
     Blockly.Python['wait'] = function (block) {
         Blockly.Python.definitions_['import_time'] = 'import time';
-        let value_wait = Blockly.Python.valueToCode(block, 'wait', Blockly.Python.ORDER_ATOMIC);
+        let value_wait = Blockly.Python.valueToCode(block, 'VALUE', Blockly.Python.ORDER_ATOMIC);
         return 'time.sleep(' + value_wait + ')\n';
     };
 
     Blockly.Blocks['wait_until'] = {
         init: function () {
-            this.appendValueInput("condition")
-                .setCheck("Boolean")
-                .appendField("wacht totdat");
-            this.setInputsInline(false);
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour("%{BKY_FLOW_RGB}");
-            this.setTooltip("");
-            this.setHelpUrl("");
+            this.jsonInit({
+                  "type": "block_type",
+                  "message0": "%{BKY_WAIT_UNTIL}",
+                  "args0": [
+                    {
+                      "type": "input_value",
+                      "name": "VALUE",
+                      "check": "Boolean"
+                    },
+                  ],
+                  "inputsInline": true,
+                  "previousStatement": null,
+                  "nextStatement": null,
+                  "colour": "%{BKY_FLOW_RGB}"
+             });
         }
     };
 
     Blockly.Python['wait_until'] = function (block) {
         Blockly.Python.definitions_['import_time'] = 'import time';
-        let value_condition = Blockly.Python.valueToCode(block, 'condition', Blockly.Python.ORDER_ATOMIC);
+        let value_condition = Blockly.Python.valueToCode(block, 'VALUE', Blockly.Python.ORDER_ATOMIC);
         // TODO: make sleep depend on frequency of topic
         return "wait_cond = " + value_condition + "\nwhile not(wait_cond):\n\ttime.sleep(.1)\n\twait_cond = " + value_condition + "\n";
     };

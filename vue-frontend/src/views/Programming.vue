@@ -1,21 +1,32 @@
 <template>
-  <div class="row p-4 h-100">
-    <div
-      class="col-3 p-2 h-100"
-      style="overflow: hidden;"
-    >
-      <div
-        class="layoutbox rounded h-100"
-        style="overflow: hidden; display: flex; flex-flow: column;"
-      >
-        <div class="text-white p-2 h3 m-0 layoutbox-title w-100 background-primary">
-          {{ $t('main.sensors') }}
-        </div>
 
 
-        <div
-          class="h-100"
-          style="overflow-y: auto;"
+       <div class="row p-4 h-100">
+
+         <div class="col-3 p-2 h-100" style="overflow: hidden;">
+             <div class="layoutbox rounded h-100" style="overflow: hidden; display: flex; flex-flow: column;">
+
+                <div class="text-black p-2 h3 m-0 layoutbox-title w-100 background-secondary">
+                   {{ $t('main.sensors') }}
+                </div>
+
+
+                <div class="h-100" style="overflow-y: auto;">
+                   <Sensors/>
+                </div>
+
+
+             </div>-         
+         </div>
+
+         <div class="col-6 p-2 h-100" style="overflow: hidden;"> 
+             <div class="layoutbox rounded h-100" style="overflow: hidden; display: flex; flex-flow: column;">
+
+                <div class="text-black p-2 h3 m-0 layoutbox-title w-100 background-secondary">
+                  {{ $t('main.programming') }}
+
+        <button v-bind:class="isBlockly?'code-active':''" class="btn btn-outline-light mr-2"
+            @click="setLanguage('blockly')"
         >
           <Sensors />
         </div>
@@ -41,9 +52,7 @@
             {{ $t('programming.blockly') }}
           </button>
 
-          <button
-            :disabled="!isBlockly"
-            class="btn btn-outline-light mr-2"
+        <button v-bind:class="!isBlockly?'code-active':''" class="btn btn-outline-light mr-2"
             @click="setLanguage('python')"
           >
             {{ $t('programming.python') }}
@@ -76,17 +85,9 @@
     </div> 
 
 
-    <div
-      class="col-3 p-2 h-100"
-      style="overflow: hidden;"
-    > 
-      <div
-        class="layoutbox rounded h-100"
-        style="overflow: hidden; display: flex; flex-flow: column;"
-      >
-        <div class="text-white p-2 h3 m-0 layoutbox-title w-100 background-primary">
-          {{ $t('main.actuators') }}
-        </div>
+                <div class="text-black p-2 h3 m-0 layoutbox-title w-100 background-secondary">
+                   {{ $t('main.actuators') }}
+                </div>
                   
            
         <div
@@ -130,9 +131,5 @@ export default {
 	   this.language = language;
         },
   }
-
-
-
-
-};
+}
 </script>

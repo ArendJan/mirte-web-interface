@@ -1,9 +1,9 @@
 {
-  "motor_l9110s": {
-    "text": "motor_l9110s",
+  "pp_motor": {
+    "text": "pp_motor",
     "pins": {
-      "1a": "pwm",
-      "1b": "pwm"
+      "p1": "pwm",
+      "p2": "pwm"
     },
     "functions": ["set_speed", "stop"],
     "default_value": {"name": "SPEED", "type": "math_number", "field": "NUM", "value": 0},
@@ -12,12 +12,25 @@
     "service_value": "speed",
     "service_name": "speed"
   },
-  "motor_l298n": {
-    "text": "motor_l298n",
+  "ddp_motor": {
+    "text": "ddp_motor",
     "pins": {
-      "1a": "digital",
-      "1b": "digital",
-      "en": "pwm"
+      "d1": "digital",
+      "d2": "digital",
+      "p1": "pwm"
+    },
+    "functions": ["set_speed", "stop"],
+    "default_value": {"name": "SPEED", "type": "math_number", "field": "NUM", "value": 0},
+    "rel_path": "Actuators\\Motor\\pwm_motor\\pwm_motor.py",
+    "service_type": "mirte_msgs/SetMotorSpeed",
+    "service_value": "speed",
+    "sercice_name": "speed"
+  },
+  "dp_motor": {
+    "text": "dp_motor",
+    "pins": {
+      "d1": "digital",
+      "p1": "pwm"
     },
     "functions": ["set_speed", "stop"],
     "default_value": {"name": "SPEED", "type": "math_number", "field": "NUM", "value": 0},
