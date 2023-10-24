@@ -1,7 +1,7 @@
 <template>
   
      <div class="layoutbox-content">
-        <div v-for="sensor in getSensorTypes()"  class="rounded background-green-light p-3 mb-2">
+        <div v-for="sensor in getSensorTypes()"  class="rounded background-tertiary p-3 mb-2">
               <h5>{{ $t('peripherals.' + peripherals[sensor].text) }}</h5>
               <div class="row">
  
@@ -11,7 +11,7 @@
 
                 <div class="col-8">
 
-                  <div v-for="instance in getInstancesOfSensor(sensor)" class="rounded background-primary p-2 text-white mb-2">
+                  <div v-for="instance in getInstancesOfSensor(sensor)" class="rounded background-sensor p-2 text-white mb-2">
                      {{instance}}: {{ sensor_values[sensor][instance] }}
                   </div>
                 </div>

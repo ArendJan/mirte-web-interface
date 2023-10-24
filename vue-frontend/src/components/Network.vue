@@ -4,7 +4,7 @@
 
 
 			<div class="layoutbox rounded">
-				<div class="text-white p-2 h3 layoutbox-title w-100 background-primary">
+				<div class="text-white p-2 h3 layoutbox-title w-100 background-secondary">
 					{{ $t('settings.wifi_header') }}
 				</div>
 
@@ -41,7 +41,7 @@
 								</div>
 								<div class="form-group">
 									<div class="col">
-										<button @click="connect" type="button" class="btn btn-success">{{ $t('settings.wifi_connect') }}</button>
+										<button @click="connect" type="button" class="btn btn-mirte">{{ $t('settings.wifi_connect') }}</button>
 									</div>
 								</div>
 							</form>

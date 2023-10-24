@@ -5,7 +5,7 @@
 
       <div v-if="programming">
 
-            <div class="rounded background-green-light h5 p-3 mb-2">
+            <div class="rounded background-tertiary h5 p-3 mb-2">
               {{ $t('actuators.output') }}              
                 <div class="float-right">
 
@@ -37,13 +37,13 @@
       </div>
 
 
-           <div class="rounded background-green-light p-3 mb-2">
+           <div class="rounded background-tertiary p-3 mb-2">
               <h5>{{ $t('actuators.control') }}</h5> 
 
                <div class="row mb-4">
 
                 <div class="col-1 offset-6">
-                <button class="btn btn-outline-dark mr-2"
+                <button class="btn btn-mirte-control mr-2 background-actuator"
                    v-b-tooltip.hover
                    :title="$t('actuators.move_forward')"
                    @click="control('forward')"
@@ -55,7 +55,7 @@
 
                <div class="row mb-4">
                 <div class="col-1 offset-4">
-                <button class="btn btn-outline-dark mr-2"
+                <button class="btn btn-mirte-control mr-2 background-actuator"
                    v-b-tooltip.hover
                    :title="$t('actuators.move_left')"
                    @click="control('left')"
@@ -65,7 +65,7 @@
                 </div>
 
                 <div class="col-2 offset-1">
-                <button class="btn btn-outline-dark mr-2"
+                <button class="btn btn-mirte-control mr-2 background-actuator"
                    v-b-tooltip.hover
                    :title="$t('actuators.move_stop')"
                    @click="control('stop')"
@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="col-1 mb-2">
-                <button class="btn btn-outline-dark mr-2"
+                <button class="btn btn-mirte-control mr-2 background-actuator"
                    v-b-tooltip.hover
                    :title="$t('actuators.move_right')"
                    @click="control('right')"
@@ -91,7 +91,7 @@
                <div class="row mb-4">
 
                 <div class="col-1 offset-6">
-                <button class="btn btn-outline-dark mr-2"
+                <button class="btn btn-mirte-control mr-2 background-actuator"
                    v-b-tooltip.hover
                    :title="$t('actuators.move_backward')"
                    @click="control('backward')"
@@ -102,7 +102,7 @@
                </div>
 
   
-              <div class="rounded background-primary p-2 text-white mb-2">
+              <div class="rounded background-actuator p-2 text-white mb-2">
                   <div class="row">
                      <div class="col-4">
                        {{ $t('actuators.speed') }}: {{ linear_speed }}
@@ -113,7 +113,7 @@
                   </div>
                </div>
 
-               <div class="rounded background-primary p-2 text-white mb-2">
+               <div class="rounded background-actuator p-2 text-white mb-2">
                   <div class="row">
                      <div class="col-4">
                        {{ $t('actuators.angular_speed') }}: {{ angular_speed }}
@@ -129,9 +129,9 @@
 
 
 
-      <div v-for="actuator in getActuators()"  class="rounded background-green-light p-3 mb-2">
+      <div v-for="actuator in getActuators()"  class="rounded background-tertiary p-3 mb-2">
               <h5>{{ $t('peripherals.' + peripherals[actuator].text) }}</h5> 
-                  <div v-for="instance in getInstancesOfActuator(actuator)" class="rounded background-primary p-2 text-white mb-2">
+                  <div v-for="instance in getInstancesOfActuator(actuator)" class="rounded background-actuator p-2 text-white mb-2">
                      <div v-if="actuator === 'servo'">
                           <div>
                             {{instance}}: {{ actuator_values[actuator][instance] }}
@@ -155,7 +155,7 @@
                        </div>
                      </div>
 
-                     <div v-if="actuator === 'motor_l9110s'">
+                     <div v-if="actuator === 'pp_motor' || actuator === 'dp_motor' || actuator === 'ddp_motor'">
                           <div>
                             {{instance}}: {{ actuator_values[actuator][instance] }}
                           </div>
@@ -163,16 +163,6 @@
                               <b-form-input id="range-1" v-model="actuator_values[actuator][instance]" @change="sendData(actuator, instance)" type="range" min="-100" max="100"></b-form-input>
                           </div>
                      </div>
-
-                     <div v-if="actuator === 'motor'">
-                          <div>
-                            {{instance}}: {{ actuator_values[actuator][instance] }}
-                          </div>
-                          <div>
-                              <b-form-input id="range-1" v-model="actuator_values[actuator][instance]" @change="sendData(actuator, instance)" type="range" min="-100" max="100"></b-form-input>
-                          </div>
-                     </div>
-
 
                   </div>
            </div>
@@ -200,7 +190,7 @@ export default {
          let types = [];
          for (let type in this.param_actuators){
              if(type == "motor"){
-                types.push("motor_" + this.param_actuators["motor"][Object.keys(this.param_actuators["motor"])[0]].type);
+                types.push(this.param_actuators["motor"][Object.keys(this.param_actuators["motor"])[0]].type + "_motor");
              } else {
                 types.push(type); 
              }
@@ -211,7 +201,7 @@ export default {
           let actuators_copy = Object.assign({}, rosparams);
           for (let type in rosparams){
             for (let instance in rosparams[type]){
-              let type_tmp = (type == "motor") ? "motor_" + rosparams["motor"][instance].type : type;
+              let type_tmp = (type == "motor") ? rosparams["motor"][instance].type + "_motor" : type;
               if (!this.peripherals.hasOwnProperty(type_tmp) || this.peripherals[type_tmp].rel_path.split("\\")[0] !== "Actuators" ){
                  delete actuators_copy[type];
               }
@@ -220,7 +210,7 @@ export default {
           this.param_actuators = actuators_copy;
         },
         getInstancesOfActuator(type){
-          type = (type.substr(0,6) == "motor_") ? "motor" : type; 
+          type = (type.slice(-6) == "_motor") ? "motor" : type;
           let ret = [];
           for (let actuator_instance in this.param_actuators[type]){
             ret.push(actuator_instance);
@@ -318,7 +308,7 @@ export default {
           for (let instance in instances){
              let actuator_renamed = actuators[actuator];
              if(actuators[actuator] == "motor"){
-                actuator_renamed = "motor_" + this.param_actuators[actuators[actuator]][instances[instance]].type;
+                actuator_renamed = this.param_actuators[actuators[actuator]][instances[instance]].type + "_motor";
              }
 
              if (actuator_renamed == "oled"){

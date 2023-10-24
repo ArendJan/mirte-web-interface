@@ -103,7 +103,6 @@ export default {
       },
       getSelectedItem(item){
          //if (window.location.href.indexOf(item.toLowerCase()) === -1){
-         //   console.log('hier');
          //   window.location = "http://"  + item.toLowerCase() + ".local";
          //}
       }, 
@@ -114,8 +113,6 @@ export default {
          if (!(username && password)) {
                return;
          }
-         console.log(username + "   "  + password)
-
          
 
          var url = "" 

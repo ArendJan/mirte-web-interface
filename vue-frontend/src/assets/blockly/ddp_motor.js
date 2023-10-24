@@ -4,14 +4,14 @@ export function load (Blockly, instances) {
         instances = [["NO PERIPHERAL CONFIGURED","NO PERIPHERAL CONFIGURED"]]
     }
 
-    Blockly.Extensions.register('dynamic_instances_extension_l9110s',
+    Blockly.Extensions.register('dynamic_instances_extension_ddp_motor',
     function() {
       this.getInput('INSTANCE')
       .appendField(new Blockly.FieldDropdown(instances), 'INSTANCE');
     });
 
 
-    Blockly.Blocks['set_speed_motor_l9110s'] = {
+    Blockly.Blocks['set_speed_ddp_motor'] = {
 	init: function () {
             this.jsonInit({
 		  "type": "block_type",
@@ -31,12 +31,12 @@ export function load (Blockly, instances) {
 		  "previousStatement": null,
 		  "nextStatement": null,
 		  "colour": "%{BKY_ACTIONS_RGB}",
-                  "extensions": ["dynamic_instances_extension_l9110s"]
+                  "extensions": ["dynamic_instances_extension_ddp_motor"]
             });
         }
     };
 
-    Blockly.Python['set_speed_motor_l9110s'] = function (block) {
+    Blockly.Python['set_speed_ddp_motor'] = function (block) {
         Blockly.Python.definitions_['import_mirte'] = 'from mirte_robot import robot\nmirte=robot.createRobot()';
         let instance = block.getFieldValue('INSTANCE');
         let speed = Blockly.Python.valueToCode(block, 'SPEED', Blockly.Python.ORDER_ATOMIC)
@@ -48,7 +48,7 @@ export function load (Blockly, instances) {
 
 
 
-    Blockly.Blocks['stop_motor_l9110s'] = {
+    Blockly.Blocks['stop_ddp_motor'] = {
         init: function () {
             this.jsonInit({
                   "type": "block_type",
@@ -63,12 +63,12 @@ export function load (Blockly, instances) {
                   "previousStatement": null,
                   "nextStatement": null,
                   "colour": "%{BKY_ACTIONS_RGB}",
-                  "extensions": ["dynamic_instances_extension_l9110s"]
+                  "extensions": ["dynamic_instances_extension_ddp_motor"]
             });
         }
     };
 
-    Blockly.Python['stop_motor_l9110s'] = function (block) {
+    Blockly.Python['stop_ddp_motor'] = function (block) {
         Blockly.Python.definitions_['import_mirte'] = 'from mirte_robot import robot\nmirte=robot.createRobot()';
         let instance = block.getFieldValue('INSTANCE');
         return `mirte.setMotorSpeed('${instance}', 0)\n`;

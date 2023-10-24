@@ -40,7 +40,7 @@ export default {
                   // Update only when in step/pause mode
                   if (event.data.substr(0, 4) == "pid:"){
                      let debugger_pid = String(event.data.substr(4));
-let strace_cmd = 'strace -ff -e write=1,2 -s 1024 -p ' + debugger_pid + ' 2>&1 | grep "^ |" --line-buffered | stdbuf -oL cut -b11-60 | stdbuf -oL sed -e "s/ //g" | xxd -r -p';
+                     let strace_cmd = 'strace -ff -e write=1,2 -s 1024 -p ' + debugger_pid + ' 2>&1 | grep "^ |" --line-buffered | stdbuf -oL cut -b11-60 | stdbuf -oL sed -e "s/ //g" | xxd -r -p';
                      this.shell_socket.send(strace_cmd + '\n');
                      this.$store.dispatch('setExecution', 'running');
                   }
@@ -101,11 +101,13 @@ let strace_cmd = 'strace -ff -e write=1,2 -s 1024 -p ' + debugger_pid + ' 2>&1 |
               this.shell_socket.send("stty echo && PS1='\\[\\e]0;\\u@\\h: \\w\\a\\]${debian_chroot:+($debian_chroot)}\\[\\033[01;32m\\]\\u@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ ' && clear\n");
               this.term.setOption('disableStdin', false);
            } else {
-              this.term.setOption('theme', { background: '#e2e8e9', foreground: '#e2e8e9', cursor: '#e2e8e9' });
+              // TODO: use colors from scss
+              this.term.setOption('theme', { background: '#fefaf7', foreground: '#fefaf7', cursor: '#fefaf7' });
               this.shell_socket.send("stty -echo && PS1='' && clear\n");
               this.shell_socket.send("clear\n");
               this.term.setOption('disableStdin', true);
-              this.term.setOption('theme', { background: '#e2e8e9', foreground: '#000000', cursor: '#e2e8e9' });
+              // TODO: use colors from scss
+              this.term.setOption('theme', { background: '#fefaf7', foreground: '#000000', cursor: '#fefaf7' });
            }
         },
         toggleTerminal() {
@@ -120,7 +122,8 @@ let strace_cmd = 'strace -ff -e write=1,2 -s 1024 -p ' + debugger_pid + ' 2>&1 |
         this.waitForSocketConnection();
 
         // The terminal
-        this.term = new Terminal({theme: { background: '#e2e8e9', foreground: '#e2e8e9', cursor: '#e2e8e9' }});
+        // TODO: use colors from scss
+        this.term = new Terminal({theme: { background: '#fefaf7', foreground: '#fefaf7', cursor: '#fefaf7' }});
         const fitAddon = new FitAddon();
         this.term.loadAddon(new AttachAddon(this.shell_socket));
         this.term.loadAddon(fitAddon);
@@ -156,7 +159,8 @@ let strace_cmd = 'strace -ff -e write=1,2 -s 1024 -p ' + debugger_pid + ' 2>&1 |
 
             switch(payload){
                 case "play":
-                    this.term.setOption('theme', { background: '#e2e8e9', foreground: '#000000', cursor: '#e2e8e9' });
+                    // TODO: use colors from scss
+                    this.term.setOption('theme', { background: '#fefaf7', foreground: '#000000', cursor: '#fefaf7' });
                     this.playCode()
                     break;
                 case "stop":

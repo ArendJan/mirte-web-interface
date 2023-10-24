@@ -1,11 +1,20 @@
-$primary: #668284;
-$green-bright: #23a880;
-$green-light: #eff2f2;
+$grey-blue: #9db7be;
+$light-blue: #cee6ed;
+$yellow: #f1be45;
+$light-grey: #ebebeb;
+$dark-grey: #a6a6a6;
+$black: #000000;
+$white: #fefaf7;
+$red: #9b372a;
 
 $colors: (
-    "primary": $primary,
-    "green-bright": $green-bright,
-    "green-light": $green-light,
+    "primary": $grey-blue,
+    "secondary": $dark-grey,
+    "tertiary": $light-grey,
+    "sensor": $grey-blue,
+    "actuator": $yellow,
+    "flow": $light-blue,
+    "data": $red
 );
 
 
