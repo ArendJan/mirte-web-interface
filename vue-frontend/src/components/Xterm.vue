@@ -114,7 +114,117 @@ export default {
         toggleTerminal() {
             //this.setTerminal(this.term.getOption('disableStdin'));
         },
+        async ble_port() {
+            const main = "ADAF0000-4669-6C65-5472-616E73666572".toLowerCase();
+            const tx = "ADAF0100-4669-6C65-5472-616E73666572".toLowerCase();
+            const rx = "ADAF0200-4669-6C65-5472-616E73666572".toLowerCase();
+            const filters = [
+        //    { acceptAllDevices: true}
+                { services: [main] }
+            ];
+            const options = {
+                // filters,
+                acceptAllDevices: true,
+
+                optionalServices: [tx,rx ]
+            };
+            const device = await navigator.bluetooth.requestDevice(options);
+            // print(device);
+            const server = await device.gatt.connect();
+            console.log(server);
+            const service = await server.getPrimaryService(main);
+            console.log(service);
+            const characteristic = await service.getCharacteristic(rx);
+            console.log(characteristic);
+            const characteristic2 = await service.getCharacteristic(tx);
+            const in_arr = [];
+            try {
+                characteristic2.addEventListener('characteristicvaluechanged', (event) => {
+                    // console.log(event);
+                    const value = event.target.value;
+                    // console.log(value);
+                    let arr = Array.from( new Uint8Array(value.buffer));
+                    in_arr.push(...arr);
+                    let str = String.fromCharCode(...arr);
+                    console.log('Received21 ', str, arr);
+                    // console.log('Received2 ' + value);
+                });
+                await characteristic2.startNotifications();
+            } catch (error) {
+                console.error('Argh2! ' + error);
+            }
+            console.log(characteristic2);
+            window.send = async function(text) {
+                let view = new DataView(new ArrayBuffer(text.length+2));
+                [...text].forEach((l, i) => {
+                    view.setUint8(i, l.charCodeAt(0));
+                })
+                view.setUint8(text.length, 0x0d); // CR
+                view.setUint8(text.length+1, 0x0a); // LF
+                console.log(view);
+                let x = await characteristic.writeValue(view.buffer);
+                console.log(x);
+                try {
+                    // await characteristic.writeValue(view); // tx from site
+                    // await characteristic2.writeValue(view);
+                } catch (error) {
+                    console.error('Argh3! ' + error);
+                }
+            }
+            window.sendR = async function(num) {
+                let view = new DataView(new ArrayBuffer(1));
+                 
+                    view.setUint8(0, num);
+                // })
+                // view.setUint8(text.length, 0x0d); // CR
+                // view.setUint8(text.length+1, 0x0a); // LF
+                console.log(view);
+                let x = await characteristic.writeValue(view.buffer);
+                console.log(x);
+                try {
+                    // await characteristic.writeValue(view); // tx from site
+                    // await characteristic2.writeValue(view);
+                } catch (error) {
+                    console.error('Argh3! ' + error);
+                }
+            }
+            let view = new DataView(new ArrayBuffer(5));
+            view.setUint8(0, 0x01);
+            view.setUint8(1, 0x02);
+            view.setUint8(2, 0x03);
+            try {
+                // await characteristic.writeValue(view); // tx from site
+                // await characterfistic2.writeValue(view);
+            } catch (error) {
+                console.error('Argh3! ' + error);
+            }
+            return {
+                write: async function(text) {
+                    let view = new DataView(new ArrayBuffer(text.length));
+                    [...text].forEach((l, i) => {
+                        view.setUint8(i, l.charCodeAt(0));
+                    })
+                    // view.setUint8(text.length, 0x0d); // CR
+                    // view.setUint8(text.length+1, 0x0a); // LF
+                    console.log(view);
+                    let x = await characteristic.writeValue(view.buffer);
+                    console.log(x);
+                    // try {
+                    //     // await characteristic.writeValue(view); // tx from site
+                    //     // await characteristic2.writeValue(view);
+                    // } catch (error) {
+                    //     console.error('Argh3! ' + error);
+                    // }
+                },
+                read: async function() {
+                    const values = [...in_arr];
+                    in_arr.length = 0;
+                    return {done: false, value:values};
+                }
+            }
+        },
         async connectCode(){
+            return await this.connectCodeBle();
              if (this.$store.getters.getSerialStatus == "connected"){
                  this.reader.cancel();
                  await this.readableStreamClosed.catch(() => { /* Ignore the error */ });
@@ -147,15 +257,47 @@ export default {
                  await this.read_serial_data();
              }
         },
+        async connectCodeBle(){
+            //  if (this.$store.getters.getSerialStatus == "connected"){
+            //      this.reader.cancel();
+            //      await this.readableStreamClosed.catch(() => { /* Ignore the error */ });
+
+            //      this.writer.close();
+            //      await this.writableStreamClosed;
+
+            //      await this.serial_port.close();
+            //      this.$store.dispatch('setSerialStatus', 'disconnected');
+            //  } else {
+            //      // TODO: try catch
+                this.serial_ble_port = await this.ble_port();
+                //  this.serial_port.addEventListener('disconnect', (event) => {
+                //      this.$store.dispatch('setSerialStatus', 'disconnected');
+                //  });
+
+                //  const textEncoder = new TextEncoderStream();
+                //  this.writer = textEncoder.writable.getWriter();
+                //  this.writableStreamClosed = textEncoder.readable.pipeTo(this.serial_port.writable);
+ 
+                await this.writeLineToPort('\x03\x03');
+                await this.upload_mirte_api();
+
+                this.$store.dispatch('setSerialStatus', 'connected');
+
+                //  const textDecoder = new TextDecoderStream();
+                //  this.readableStreamClosed = this.serial_port.readable.pipeTo(textDecoder.writable);
+                //  this.reader = textDecoder.readable.getReader();
+                await this.read_serial_data();
+            //  }
+        },
         async read_serial_data(){
           // Listen to data coming from the serial device.
           let line = ""
-          while (true) {
-            const { value, done } = await this.reader.read();
+          setInterval(async () => {
+            const { value, done } = await this.serial_ble_port.read();
               if (done) {
                 // Allow the serial port to be closed later.
                 this.reader.releaseLock();
-                break;
+                return; 
               }
 
             let nextpart = line + value
@@ -171,57 +313,57 @@ export default {
                 }
               }
             }
-          }
+          }, 100);
         },
-        upload_mirte_api(){
+        async upload_mirte_api(){
              // Make dir
-             this.writeLineToPort('import os')
-             this.writeLineToPort('if "mirte_robot" not in os.listdir():')   //os.path. does not exist in micropython
-             this.writeLineToPort('  os.mkdir("mirte_robot")')
-             this.writeLineToPort('')
+             await this.writeLineToPort('import os')
+             await this.writeLineToPort('if "mirte_robot" not in os.listdir():')   //os.path. does not exist in micropython
+             await this.writeLineToPort('  os.mkdir("mirte_robot")')
+             await this.writeLineToPort('')
 
              // Make class
-             this.putFile("/mirte_robot/__init__.py", "");
+             await this.putFile("/mirte_robot/__init__.py", "");
 
              // Upload Mirte API (TODO: do so in a beter way)
              let code = "from machine import Pin, ADC, PWM\nmirte = {}\n\nclass Robot():\n  def __init__(self):\n    i = 20\n\n  def setDigitalPinValue(self, pin, value):\n    Pin(int(pin), Pin.OUT).value(value)\n\n  def setAnalogPinValue(self, pin, value):\n    pwm = PWM(Pin(int(pin)))\n    pwm.freq(1000)\n    pwm.duty_u16(value)\n\n  def getDigitalPinValue(self, pin):\n    return Pin(int(pin), Pin.IN).value()\n\n  def getAnalogPinValue(self, pin):\n    return ADC(int(pin)).read_u16()\n\ndef createRobot():\n  global mirte\n  mirte = Robot()\n  return mirte"
-             this.putFile("/mirte_robot/robot.py", code);
+             await this.putFile("/mirte_robot/robot.py", code);
 
              // Upload main.py
-             code = "import sys\nfrom machine import Pin\ntry:\n  exec(open('./mirte.py').read(),globals())\nexcept KeyboardInterrupt:\n  for i in range(0,29):\n    Pin(i, Pin.IN, Pin.PULL_DOWN)\n  sys.exit(0)\nfor i in range(0,29):\n  Pin(i, Pin.IN, Pin.PULL_DOWN)";
-             this.putFile("/main.py", code);
+             code = "from testrepl import start\nstart()\nimport sys\nfrom machine import Pin\ntry:\n  exec(open('./mirte.py').read(),globals())\nexcept KeyboardInterrupt:\n  for i in range(0,29):\n    Pin(i, Pin.IN, Pin.PULL_DOWN)\n  sys.exit(0)\nfor i in range(0,29):\n  Pin(i, Pin.IN, Pin.PULL_DOWN)";
+             await this.putFile("/main.py", code);
 
         },
-        play(){
+        async play(){
              // Uploade code
              const code = this.$store.getters.getCode;
-             this.writeLineToPort('\x03\x03') // Send CTRL-C to kill running program (needed?)
-             this.putFile("mirte.py", code); 
+             await this.writeLineToPort('\x03\x03') // Send CTRL-C to kill running program (needed?)
+             await this.putFile("mirte.py", code); 
 
              // And run right away
              // TODO: in order to get step and pause wokring we need to execute it line by line
              // 1) by introcuding a linetrace? or 2) just doing it step by step here?
-             this.writeLineToPort('exec(open("main.py").read(),globals())')
+             await this.writeLineToPort('exec(open("main.py").read(),globals())')
         },
-        stopCode(){
-             this.writeLineToPort('\x03\x03') // Send CTRL-C to kill running program
+        async stopCode(){
+            await this.writeLineToPort('\x03\x03') // Send CTRL-C to kill running program
              //this.writeLineToPort('import machine');
              //this.writeLineToPort('machine.soft_reset()');
         },
-        putFile(filename, code){
-          this.writeLineToPort("f = open('" + filename + "', 'wb')");
+        async putFile(filename, code){
+            await this.writeLineToPort("f = open('" + filename + "', 'wb')");
 
           var lines = code.split('\n');
           for(var i = 0;i < lines.length;i++){
               // do i need to escape anything?
-              this.writeLineToPort('e = f.write("' + lines[i] + '\\n")');
+              await this.writeLineToPort('e = f.write("' + lines[i] + '\\n")');
           }
 
-          this.writeLineToPort("f.close()");
+          await this.writeLineToPort("f.close()");
         },
-        writeLineToPort(line){
+        async writeLineToPort(line){
            //console.log("[WRITE] " + line);
-           this.writer.write(line + '\r');
+           await this.serial_ble_port.write(line + '\r');
         },
     },
     mounted()  {
